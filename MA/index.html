@@ -363,6 +363,101 @@ body.welcome-on #app { padding-bottom: 0; }
 .feed .it small { display: block; color: var(--muted); font-size: 12px; }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 
+/* ------------------------------------------------ money and photo to plan */
+.moneyhint, .photobtn, .payset { display: flex; gap: 12px; align-items: center; width: 100%; text-align: left; background: var(--card); border: 1px dashed var(--brass-lt); border-radius: 18px; padding: 12px 14px; }
+.moneyhint { margin: 10px 16px; width: calc(100% - 32px); }
+.moneyhint b, .photobtn b, .payset b { display: block; font-weight: 700; }
+.moneyhint small, .photobtn small, .payset small { display: block; color: var(--muted); font-size: 13px; font-weight: 500; }
+.moneyhint > .ic, .photobtn > .ic:first-child, .payset > .ic:first-child { color: var(--brass-dk); }
+.photobtn { border-style: solid; margin: 8px 0 10px; background: color-mix(in srgb, var(--brass) 7%, var(--card)); }
+.payset { border-style: solid; margin: 0 0 8px; }
+.card.money { border-color: var(--brass-lt); }
+.wallet { display: flex; gap: 10px; align-items: flex-start; background: color-mix(in srgb, var(--brass) 12%, var(--card)); border-radius: 14px; padding: 10px 12px; margin-bottom: 6px; font-size: 14.5px; color: var(--brass-dk); }
+.wallet .ic { vertical-align: 0; margin-top: 1px; }
+.payrow .amt { font-weight: 800; font-size: 16px; margin-left: 6px; }
+.payrow.now .tx { color: var(--brass-dk); }
+.payrow.late .tx small { color: var(--warn); }
+.photopick { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 22px 12px; border: 1.5px dashed var(--brass); border-radius: 20px; background: var(--card2); cursor: pointer; text-align: center; }
+.photopick .ic { color: var(--brass-dk); width: 28px; height: 28px; }
+.photopick small { color: var(--muted); }
+.thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
+.thumb { position: relative; aspect-ratio: 3 / 4; border-radius: 12px; overflow: hidden; background: var(--card2); }
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumb button { position: absolute; top: 4px; right: 4px; width: 26px; height: 26px; border-radius: 50%; background: rgba(0, 0, 0, .55); color: #fff; display: grid; place-items: center; }
+.thumb button .ic { vertical-align: 0; }
+.thumb span { position: absolute; left: 6px; bottom: 4px; color: #fff; font-weight: 700; font-size: 12px; text-shadow: 0 1px 3px rgba(0, 0, 0, .6); }
+/* on the photo review a tick means "add this", so nothing is crossed out; left out ones fade */
+.tick.pick.done .tx { text-decoration: none; color: var(--ink); }
+.tick.pick.done .ii { opacity: 1; }
+.tick.pick:not(.done) .tx, .tick.pick:not(.done) .ii { opacity: .45; }
+
+/* ------------------------------------------------ weather */
+.wxstrip { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 2px 16px 10px; width: calc(100% - 32px); text-align: left; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 10px 14px; box-shadow: var(--shadow); }
+.wxstrip .lbl { font: italic 600 19px var(--serif); color: var(--brass-dk); margin-right: 2px; }
+.wxstrip .tip { flex-basis: 100%; font-size: 13px; color: var(--muted); font-weight: 600; }
+.wx { display: inline-flex; align-items: center; gap: 5px; font-size: 14px; font-weight: 700; padding: 3px 10px 3px 8px; border-radius: 99px; background: var(--card2); white-space: nowrap; }
+.wx .ic { vertical-align: 0; }
+.wx small { font-weight: 600; color: var(--muted); font-size: 12.5px; }
+.wx.rain { color: #3A6A96; background: #E8EEF4; }
+.wx.rain.hi { background: #D6E3EF; }
+.wx.sun { color: #9A6B12; background: #F8EFD9; }
+.wx.dry { color: var(--muted); }
+.wx.temp { background: none; color: var(--muted); padding-left: 2px; }
+.wxstrip .wx { font-size: 15.5px; }
+.daywx { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 16px 6px 64px; font-size: 13px; }
+.daywx .wx { font-size: 12.5px; padding: 2px 8px 2px 6px; }
+.heat .c .uvmini { font-size: 10px; color: #9A6B12; font-weight: 800; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .wx.rain { background: #1F3040; color: #9CC3E6; } :root:not([data-theme="light"]) .wx.sun { background: #3A2F17; color: #F0C66B; } }
+:root[data-theme="dark"] .wx.rain { background: #1F3040; color: #9CC3E6; }
+:root[data-theme="dark"] .wx.sun { background: #3A2F17; color: #F0C66B; }
+
+/* ------------------------------------------------ traffic and cameras */
+.trafficlink { display: flex; align-items: center; gap: 8px; margin: -2px 16px 10px; width: calc(100% - 32px); padding: 9px 14px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); font-weight: 600; font-size: 14.5px; color: var(--dad); }
+.trafficlink span { flex: 1; text-align: left; }
+.card.traffic { border-color: color-mix(in srgb, var(--dad) 35%, var(--line)); }
+.run { display: flex; gap: 10px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.run:last-of-type { border-bottom: 0; }
+.run small { display: block; color: var(--muted); font-size: 12.5px; }
+.run .mins { text-align: right; font-size: 13px; color: var(--muted); white-space: nowrap; }
+.run .mins b { font-family: var(--serif); font-size: 30px; line-height: 1; margin-right: 2px; color: var(--ok); }
+.run .mins i { display: block; font-style: normal; font-weight: 800; font-size: 12.5px; }
+.run .mins.slow b, .run .mins.slow i { color: #B7791F; }
+.run .mins.bad b, .run .mins.bad i { color: var(--warn); }
+.camgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+.camgroup { grid-column: 1 / -1; font: italic 600 17px var(--serif); color: var(--brass-dk); margin-top: 6px; }
+.camtile { position: relative; }
+.camimg { display: block; width: 100%; aspect-ratio: 16 / 10; border-radius: 12px; overflow: hidden; background: #1d2021; }
+.camimg img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.camvid { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; height: 100%; color: #cfd6d9; }
+.camvid small { font-size: 12px; font-weight: 700; letter-spacing: .04em; }
+.camname { display: block; font-size: 12.5px; font-weight: 700; margin: 5px 26px 0 2px; line-height: 1.25; }
+.camfav { position: absolute; right: 0; bottom: -2px; width: 26px; height: 26px; display: grid; place-items: center; color: var(--muted); }
+.camfav .ic { vertical-align: 0; }
+.camview { border-radius: 16px; overflow: hidden; background: #111; margin-top: 8px; }
+.camview img, .camview video { display: block; width: 100%; height: auto; max-height: 70vh; object-fit: contain; background: #111; }
+.spot { border: 1px solid var(--line); border-radius: 16px; padding: 10px 12px; margin: 8px 0; background: var(--card); }
+.spot.found { border-color: color-mix(in srgb, var(--ok) 35%, var(--line)); }
+.spot small { display: block; margin-top: 6px; font-size: 12.5px; font-weight: 600; }
+.spot .okc { color: var(--ok); }
+.spot .okc .ic { vertical-align: -2px; }
+
+/* ------------------------------------------------ buses */
+.card.buses { border-color: color-mix(in srgb, var(--dad) 30%, var(--line)); }
+.busstop { padding: 8px 0 4px; border-bottom: 1px solid var(--line); }
+.busstop:last-of-type { border-bottom: 0; }
+.bsn { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; flex-wrap: wrap; }
+.bsn .ic { color: var(--dad); vertical-align: 0; }
+.bsn .muted { font-size: 12.5px; font-weight: 600; }
+.bus { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
+.bus .rt { min-width: 42px; text-align: center; font-weight: 800; font-size: 13.5px; color: #fff; background: var(--dad); border-radius: 8px; padding: 3px 6px; }
+.bus b { font-size: 15.5px; }
+.bus small { display: block; color: var(--muted); font-size: 12px; }
+.bus .when { font-weight: 700; font-size: 13.5px; color: var(--muted); white-space: nowrap; }
+.bus .when.soon { color: var(--ok); }
+.busgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 10px; font-size: 13.5px; margin: 6px 0; }
+.busgrid span { white-space: nowrap; color: var(--muted); }
+.busgrid b { color: var(--ink); }
+
 </style>
 </head>
 <body>
@@ -436,7 +531,7 @@ var MA = (function () {
     sport: { label: 'Sport', icon: 'ball', color: '#4C7A5A' }, gaa: { label: 'GAA', icon: 'hurley', color: '#A8433A' }, swim: { label: 'Swim', icon: 'waves', color: '#3A78A8' },
     music: { label: 'Music', icon: 'note', color: '#7A5C9E' }, school: { label: 'School', icon: 'book', color: '#3F5A86' }, health: { label: 'Doctor / dentist', icon: 'health', color: '#B4546A' },
     party: { label: 'Party', icon: 'gift', color: '#B8862F' }, club: { label: 'Club', icon: 'star', color: '#4F7F80' }, family: { label: 'Family', icon: 'home', color: '#6B8A5C' },
-    trip: { label: 'Trip', icon: 'car', color: '#5B6B7A' }, errand: { label: 'Errand', icon: 'cart', color: '#8A6F4E' }, other: { label: 'Other', icon: 'dot', color: '#7A746B' }
+    trip: { label: 'Trip', icon: 'car', color: '#5B6B7A' }, errand: { label: 'Errand', icon: 'cart', color: '#8A6F4E' }, money: { label: 'Money', icon: 'coin', color: '#5E7A3A' }, other: { label: 'Other', icon: 'dot', color: '#7A746B' }
   };
   var DEFAULTS = {
     parents: { dad: { name: 'Dave', email: '' }, mum: { name: 'Laura', email: '' } },
@@ -447,6 +542,22 @@ var MA = (function () {
     gcal: { mode: 'off', id: '', url: '' },
     ntfy: { on: false, topic: '', changes: true },
     places: {},
+    money: { hour: 7, heads: 2 },
+    weather: { on: true, place: 'Douglas, Cork', lat: 51.876, lon: -8.436 },
+    // places with real addresses, and the weekday runs (live traffic). Home needs its Eircode typed in once.
+    spots: [
+      { id: 'home', name: 'Home', address: '', lat: null, lon: null },
+      { id: 'gaelscoil', name: 'Gaelscoil Dhúglais', address: 'Gaelscoil Dhúglais, Douglas, Cork', lat: null, lon: null },
+      { id: 'finbarrs', name: "St Finbarr's", address: "St Finbarr's Hospital, Douglas Road, Cork", lat: null, lon: null },
+      { id: 'iosagain', name: 'Scoil Íosagáin', address: 'Scoil Íosagáin, Knockpogue Avenue, Farranree, Cork', lat: null, lon: null }
+    ],
+    commutes: [
+      { id: 'dave-am', who: 'dad', name: 'School and work', stops: ['home', 'gaelscoil', 'finbarrs'], days: [1, 2, 3, 4, 5], leave: '08:15', on: true },
+      { id: 'laura-am', who: 'mum', name: 'Farranree', stops: ['home', 'iosagain'], days: [1, 2, 3, 4, 5], leave: '08:00', on: true }
+    ],
+    traffic: { alert: 7 },
+    buses: { stops: ['8380B234611'] }, // Moneygurney, into town; add the one outside home in the app
+    cams: ['m28-rochestown-n', 'm28-rochestown-s', 'm28-carrs-s', 'tii-j9-e', 'tii-j9-w', 'tii-jlt-s', 'tii-jlt-n', 'tii-dunkettle-n40'],
     hostUrl: ''
   };
 
@@ -553,11 +664,12 @@ var MA = (function () {
     rawDates(ev, addDays(from, -14), addDays(to, 14)).forEach(function (d) {
       if (skip[d]) return;
       var o = merge(ev, over[d] || {});
-      delete o.skip; delete o.over; delete o.packed;
+      delete o.skip; delete o.over; delete o.packed; delete o.paid;
       o.orig = d; o.date = (over[d] && isYmd(over[d].date)) ? over[d].date : d;
       if (o.date < from || o.date > to) return;
       o.ev = ev.id; o.key = ev.id + '|' + d; o.series = !!(ev.repeat && ev.repeat.freq); o.changed = !!over[d];
       o.packed = (ev.packed && ev.packed[d]) || [];
+      o.paid = (ev.paid && ev.paid[d]) || null;
       out.push(o);
     });
     return out;
@@ -605,6 +717,90 @@ var MA = (function () {
     return m ? fromMins(t - m) : null;
   }
 
+  // ---------------------------------------------------------------- money: Lisa, Trish, party balances…
+  // An event pays someone when it has money.amount. The heads-up starts money.heads days before (default 2),
+  // because the wallet is usually at home.
+  function euro(n) {
+    n = +n || 0;
+    var whole = Math.floor(Math.abs(n)), cents = Math.round((Math.abs(n) - whole) * 100);
+    if (cents === 100) { whole++; cents = 0; }
+    return (n < 0 ? '-' : '') + '€' + String(whole).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (cents ? '.' + pad(cents) : '');
+  }
+  function payee(o) { return (o.money && o.money.to) || o.title; }
+  function isPayment(o) { return !!(o && o.money && +o.money.amount > 0); }
+  function headsDays(o, st) { var h = o.money && o.money.heads; return h === 0 || h ? +h : ((st && st.money && st.money.heads) || 2); }
+  // unpaid payments from today until the furthest heads-up window, each tagged with how close it is
+  function moneyDue(data, today, days) {
+    var st = merge(DEFAULTS, data.settings || {}), out = [];
+    range(data, today, addDays(today, days || 14)).forEach(function (o) {
+      if (!isPayment(o) || o.paid) return;
+      var left = diffDays(today, o.date);
+      out.push({ o: o, amount: +o.money.amount, left: left, heads: headsDays(o, st), now: left <= headsDays(o, st), cash: (o.money.method || 'cash') === 'cash' });
+    });
+    // anything already overdue and still unpaid (last fortnight)
+    range(data, addDays(today, -14), addDays(today, -1)).forEach(function (o) {
+      // only since it was added: a weekly payment set up today shouldn't show last week's as overdue
+      if (isPayment(o) && !o.paid && o.created && o.date >= ymd(new Date(o.created))) out.push({ o: o, amount: +o.money.amount, left: diffDays(today, o.date), heads: headsDays(o, st), now: true, late: true, cash: (o.money.method || 'cash') === 'cash' });
+    });
+    return out.sort(function (a, b) { return a.left - b.left; });
+  }
+  function moneySay(m, today) {
+    var o = m.o, when = m.late ? 'was due ' + shortDate(o.date) : m.left === 0 ? 'today' : m.left === 1 ? 'tomorrow' : (m.left > 6 ? shortDate(o.date) : WDL[weekday(o.date)]);
+    return euro(m.amount) + (m.cash ? ' cash' : '') + ' for ' + payee(o) + ', ' + when;
+  }
+
+  // ---------------------------------------------------------------- weather (Open-Meteo: free, no key)
+  // Umbrella and the chance of rain when it's 20% or more; sun and the UV number when it's 3 or more (sunscreen).
+  function wxUrl(st) {
+    var w = (st && st.weather) || DEFAULTS.weather;
+    return 'https://api.open-meteo.com/v1/forecast?latitude=' + (+w.lat).toFixed(3) + '&longitude=' + (+w.lon).toFixed(3) +
+      '&daily=precipitation_probability_max,uv_index_max,temperature_2m_max,temperature_2m_min,weather_code&hourly=precipitation_probability&timezone=Europe%2FDublin&forecast_days=8';
+  }
+  function parseWx(j) {
+    var out = { days: {}, hours: {} };
+    if (!j || !j.daily || !j.daily.time) return out;
+    j.daily.time.forEach(function (d, i) {
+      var num = function (k) { var v = (j.daily[k] || [])[i]; return v === null || v === undefined ? null : +v; };
+      out.days[d] = { rain: num('precipitation_probability_max'), uv: num('uv_index_max'), tmax: num('temperature_2m_max'), tmin: num('temperature_2m_min'), code: num('weather_code') };
+    });
+    var h = j.hourly || {};
+    (h.time || []).forEach(function (t, i) { var v = (h.precipitation_probability || [])[i]; if (v !== null && v !== undefined) out.hours[t.slice(0, 13)] = +v; });
+    return out;
+  }
+  // the rain chance at a given hour, e.g. for a match at 10am
+  function wxAt(wx, day, t) { if (!wx || !t) return null; var v = wx.hours[day + 'T' + String(t).slice(0, 2)]; return v === undefined ? null : v; }
+  // when the rain is most likely, in waking hours: "from 1pm", "1pm to 5pm", "in the morning"
+  function wxWindow(wx, day) {
+    var hrs = [];
+    for (var h = 7; h <= 21; h++) { var v = wx.hours[day + 'T' + pad(h)]; if (v !== undefined && v >= 50) hrs.push(h); }
+    if (!hrs.length) return '';
+    var a = hrs[0], b = hrs[hrs.length - 1];
+    if (a <= 8 && b >= 20) return 'all day';
+    if (b >= 20) return 'from ' + time12(pad(a) + ':00');
+    if (a === b) return 'around ' + time12(pad(a) + ':00');
+    return time12(pad(a) + ':00') + ' to ' + time12(pad(b + 1) + ':00');
+  }
+  function wxDay(wx, day) {
+    var d = wx && wx.days[day];
+    if (!d) return null;
+    var rain = d.rain === null ? null : Math.round(d.rain), uv = d.uv === null ? null : Math.round(d.uv);
+    return { day: day, rain: rain, uv: uv, wet: rain !== null && rain >= 20, sunny: d.uv !== null && d.uv >= 3, when: rain !== null && rain >= 50 ? wxWindow(wx, day) : '',
+      tmax: d.tmax === null ? null : Math.round(d.tmax), tmin: d.tmin === null ? null : Math.round(d.tmin) };
+  }
+  // the same thing in words, for emails and alerts
+  function wxWords(w) {
+    if (!w) return '';
+    var bits = [];
+    if (w.wet) bits.push('Rain ' + w.rain + '%' + (w.when ? ', ' + w.when : '') + (w.rain >= 50 ? ', bring the umbrella' : ''));
+    if (w.sunny) bits.push('UV ' + w.uv + ', sunscreen');
+    if (!bits.length) bits.push('Dry' + (w.rain !== null ? ' (rain ' + w.rain + '%)' : ''));
+    if (w.tmax !== null) bits.push((w.tmin !== null ? w.tmin + '–' : '') + w.tmax + '°');
+    return bits.join(' · ');
+  }
+  // which forecast to show: today in the morning and afternoon, tomorrow from 4pm
+  function wxWhich(now) { now = now || new Date(); return now.getHours() >= 16 ? addDays(ymd(now), 1) : ymd(now); }
+  function isOutdoor(o) { return o && (o.cat === 'gaa' || o.cat === 'sport'); }
+
   // ---------------------------------------------------------------- the night-before summary
   function digest(data, day, parent) {
     var st = merge(DEFAULTS, data.settings || {});
@@ -623,7 +819,8 @@ var MA = (function () {
       if (l.kind === 'away' && l.to && l.to < day) return;
       (l.items || []).forEach(function (it) { if (!it.day && !it.doneOn && it.important) undated.push({ list: l, item: it }); });
     });
-    return { day: day, parent: parent, settings: st, events: evs, bring: bring, drive: drive, mine: parent ? drive[parent] : [], soon: soon, tasks: tasks, flagged: undated, clashes: clashes(evs, st), open: noDriver(evs), cover: needsCover(data, evs, day), plan: timeline(data, day) };
+    return { day: day, parent: parent, settings: st, events: evs, bring: bring, drive: drive, mine: parent ? drive[parent] : [], soon: soon, tasks: tasks, flagged: undated, clashes: clashes(evs, st), open: noDriver(evs), cover: needsCover(data, evs, day), plan: timeline(data, day),
+      money: moneyDue(data, addDays(day, -1), 14).filter(function (m) { return m.now && (!m.o.money.by || !parent || m.o.money.by === parent); }) };
   }
 
   // ---------------------------------------------------------------- quick add: "Ari swimming wed 5pm every week"
@@ -703,6 +900,7 @@ var MA = (function () {
     if (/holiday|trip|flight|airport|ferry|camp/.test(t)) return 'trip';
     if (/nana|granny|grandad|dinner|family|cousin|mass|christening|wedding/.test(t)) return 'family';
     if (/tesco|shopping|collect.*shop|click|pharmacy|post office/.test(t)) return 'errand';
+    if (/\bpay\b|cleaner|childminder|minder|fees?\b|€/.test(t)) return 'money';
     return 'other';
   }
 
@@ -732,6 +930,7 @@ var MA = (function () {
     if (o.bring && o.bring.length) d.push('Bring: ' + o.bring.join(', '));
     if (o.drop) d.push('Drop: ' + parentName(o.drop, st));
     if (o.pick) d.push('Collect: ' + parentName(o.pick, st));
+    if (isPayment(o)) d.push('Pay ' + euro(o.money.amount) + ((o.money.method || 'cash') === 'cash' ? ' cash' : '') + ' to ' + payee(o));
     if (o.notes) d.push(o.notes);
     return d.join('\n');
   }
@@ -832,6 +1031,8 @@ var MA = (function () {
     time12: time12, dayWords: dayWords, shortDate: shortDate, longDate: longDate, kidName: kidName, parentName: parentName, describeRepeat: describeRepeat,
     rawDates: rawDates, occurrences: occurrences, range: range, timeline: timeline, partOf: partOf, byTime: byTime, forKid: forKid, itemsOn: itemsOn, isDone: isDone, leaveBy: leaveBy,
     awayOn: awayOn, needsCover: needsCover, jobs: jobs, clashes: clashes, noDriver: noDriver, week: week, minsLevel: minsLevel, runsLevel: runsLevel,
+    wxUrl: wxUrl, parseWx: parseWx, wxAt: wxAt, wxDay: wxDay, wxWords: wxWords, wxWhich: wxWhich, wxWindow: wxWindow, isOutdoor: isOutdoor,
+    euro: euro, payee: payee, isPayment: isPayment, headsDays: headsDays, moneyDue: moneyDue, moneySay: moneySay,
     digest: digest, parseQuick: parseQuick, guessCat: guessCat, rrule: rrule, gcalUrl: gcalUrl, icsText: icsText, details: details, calHash: calHash, endOf: endOf, kidPrefix: kidPrefix
   };
 })();
@@ -870,14 +1071,14 @@ function kidPills(k) {
   return '<span class="pill" style="--c:' + kidColor(k) + '">' + esc(kName(k)) + '</span>';
 }
 // ------------------------------------------------------------ talking to Apps Script
-function transport(body) {
-  if (window.MA_BACKEND) return new Promise(function (res) { setTimeout(function () { res(JSON.parse(window.MA_BACKEND(JSON.stringify(body)))); }, 120); });
-  var ctl = window.AbortController ? new AbortController() : null, t = ctl && setTimeout(function () { ctl.abort(); }, 60000);
+function transport(body, wait) {
+  if (window.MA_BACKEND) return new Promise(function (res) { setTimeout(function () { res(JSON.parse(window.MA_BACKEND(JSON.stringify(body)))); }, window.MA_DELAY || 120); });
+  var ctl = window.AbortController ? new AbortController() : null, t = ctl && setTimeout(function () { ctl.abort(); }, wait || 60000);
   return fetch(S.conn.url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body), redirect: 'follow', signal: ctl ? ctl.signal : undefined })
     .then(function (r) { if (t) clearTimeout(t); return r.json(); });
 }
-function api(action, payload) {
-  return transport({ action: action, payload: payload || {}, me: S.me }).then(function (o) {
+function api(action, payload, wait) {
+  return transport({ action: action, payload: payload || {}, me: S.me }, wait).then(function (o) {
     if (!o || !o.ok) { var e = new Error((o && o.error) || 'Something went wrong'); e.server = true; throw e; }
     return o.data;
   });
@@ -886,6 +1087,7 @@ function api(action, payload) {
 // Every change is applied on this phone first, then queued, so the app never waits on the network.
 function queue(action, payload, quiet) {
   var op = { id: MA.uid('q'), action: action, payload: payload };
+  S.gen = (S.gen || 0) + 1;
   applyLocal(op);
   S.queue.push(op); store.set('ma-queue', S.queue);
   saveCache();
@@ -902,11 +1104,16 @@ function applyLocal(op) {
     if (l && String(p.itemId).indexOf('ev:') === 0) { l.evDone = l.evDone || {}; l.evDone[String(p.itemId).slice(3)] = { doneOn: p.doneOn, by: p.doneOn ? S.me : '', at: Date.now() }; return; }
     var it = l && (l.items || []).filter(function (x) { return x.id === p.itemId; })[0];
     if (it) { it.doneOn = p.doneOn; it.by = p.doneOn ? S.me : ''; it.at = Date.now(); }
+  } else if (op.action === 'paid') {
+    var pe = find(d.events, p.eventId);
+    if (pe) { pe.paid = pe.paid || {}; if (p.on) pe.paid[p.date] = { by: S.me, at: Date.now() }; else delete pe.paid[p.date]; }
   } else if (op.action === 'pack') {
     var ev = find(d.events, p.eventId);
     if (ev) { ev.packed = ev.packed || {}; var a = ev.packed[p.date] = ev.packed[p.date] || [], i = a.indexOf(p.item); if (p.on && i < 0) a.push(p.item); if (!p.on && i >= 0) a.splice(i, 1); }
   }
 }
+// changes still waiting to send are re-applied on top of whatever the server last said
+function rebase() { S.queue.forEach(applyLocal); }
 function upsert(arr, obj) { for (var i = 0; i < arr.length; i++) if (arr[i].id === obj.id) { arr[i] = obj; return; } arr.push(obj); }
 function find(arr, id) { return (arr || []).filter(function (x) { return x.id === id; })[0]; }
 function saveCache() { store.set('ma-data', S.data); }
@@ -918,9 +1125,12 @@ function flush() {
   var op = S.queue[0];
   return api(op.action, op.payload).then(function (res) {
     S.queue.shift(); store.set('ma-queue', S.queue);
+    var shown = JSON.stringify([S.data.events, S.data.lists, S.data.settings]);
     if (res && res.event) upsert(S.data.events, res.event);
     if (res && res.list) upsert(S.data.lists, res.list);
     if (res && res.settings) S.data.settings = res.settings;
+    rebase();
+    if (JSON.stringify([S.data.events, S.data.lists, S.data.settings]) !== shown) softRender();
     if (res && res.conflict) toast(pName(res.conflict) + ' changed this a moment ago too. Yours was saved; check it looks right.');
     if (res && res.mailError) toast('Saved, but the email did not send: ' + res.mailError);
     saveCache(); S.online = true; flushing = false;
@@ -939,7 +1149,11 @@ function reload(quiet) {
   if (!S.conn) return Promise.resolve();
   if (S.queue.length) return flush();
   setSync('busy');
+  var gen = S.gen || 0;
   return api('load', { host: location.origin + location.pathname }).then(function (d) {
+    // something was tapped while this was on its way: its copy is already out of date.
+    // The save for that tap fetches a fresh one when it finishes.
+    if ((S.gen || 0) !== gen || S.queue.length || flushing) { setSync(S.queue.length ? 'busy' : 'ok'); return; }
     var before = JSON.stringify([S.data.events, S.data.lists, S.data.settings, (S.data.log || []).slice(0, 3)]);
     S.data = d; S.online = true; saveCache(); setSync('ok');
     if (before !== JSON.stringify([d.events, d.lists, d.settings, (d.log || []).slice(0, 3)])) softRender();
@@ -966,14 +1180,18 @@ function toast(msg, undo) {
   clearTimeout(toastT); toastT = setTimeout(function () { t.classList.remove('show'); S.undo = null; }, undo ? 5000 : 3200);
 }
 function openSheet(html, after) {
+  sheetCleanup();
   $('#sheetBody').innerHTML = html;
   var sh = $('#sheet'); sh.classList.add('open'); sh.setAttribute('aria-hidden', 'false'); S.sheetOpen = true;
   $('#sheet .panel').scrollTop = 0;
   if (!history.state || !history.state.sheet) history.pushState({ sheet: 1 }, '');
   if (after) after($('#sheetBody'));
 }
+// whatever a sheet started (a live camera, a timer) is stopped when the sheet goes
+function sheetCleanup() { if (S.sheetCleanup) { var f = S.sheetCleanup; S.sheetCleanup = null; try { f(); } catch (e) { } } }
 function closeSheet(fromPop) {
   var sh = $('#sheet'); if (!sh.classList.contains('open')) return;
+  sheetCleanup();
   sh.classList.remove('open'); sh.setAttribute('aria-hidden', 'true'); S.sheetOpen = false; S.form = null;
   if (!fromPop && history.state && history.state.sheet) history.back();
   if (S.pendingRender) { S.pendingRender = false; render(); }
@@ -1096,15 +1314,19 @@ function viewHome() {
   var counts = { all: 0, max: 0, ari: 0 };
   MA.range(S.data, t, t).forEach(function (o) { counts.all++; if (MA.forKid(o, 'max')) counts.max++; if (MA.forKid(o, 'ari')) counts.ari++; });
   h += '<h1 class="hello">' + greet() + ', ' + esc(s.parents[S.me].name) + '</h1><p class="sub">' + esc(MA.longDate(t)) + '</p>';
+  h += wxStrip();
+  h += trafficCard();
+  h += busCard();
   h += stories(counts);
   var news = lastByOther();
   if (news.length) h += '<button class="news" data-act="feed"><span class="dot"></span><span class="grow">' + esc(news[0].by) + ' ' + esc(news[0].what.toLowerCase()) + ': ' + esc(news[0].detail) + (news.length > 1 ? ' <span class="muted">+' + (news.length - 1) + ' more</span>' : '') + '</span>' + ic('right', 18) + '</button>';
   var away = awayPlanOn(t);
   if (away) {
     var ls = listStats(away), left = MA.itemsOn(S.data, t).filter(function (x) { return x.list.id === away.id && !x.done; }).length;
-    h += '<button class="awaybar" data-act="openList" data-id="' + esc(away.id) + '"><span class="tile" style="--tc:var(--brass)">' + ic('suitcase', 18) + '</span><span class="grow"><b>' + esc(away.title) + '</b> until ' + esc(MA.dayWords(away.to, t)) +
+    h += '<button class="awaybar" data-act="openList" data-id="' + esc(away.id) + '"><span class="tile" style="--tc:var(--brass)">' + ic('suitcase', 18) + '</span><span class="grow"><b>' + esc(away.title) + '</b> until ' + esc(MA.dayWords(away.to, t).replace(/^To(day|morrow)$/, function (w) { return w.toLowerCase(); })) +
       '<small>' + (left ? left + ' jobs left today' : 'Today\'s jobs all done') + ' · ' + ls.done + '/' + ls.n + ' for the whole plan</small></span>' + ic('right', 18) + '</button>';
   }
+  h += moneyCard();
   h += heatCard(wk);
   if (S.day === t) h += nextUp();
   h += dayBlock(S.day);
@@ -1128,6 +1350,11 @@ function heatCard(wk) {
     });
     return r;
   }
+  if (S.wx) h += row('Rain', '#3A78A8', function (d) {
+    var w = MA.wxDay(S.wx, d.date);
+    if (!w || w.rain === null) return { lv: 0, say: 'no forecast' };
+    return { lv: w.rain >= 80 ? 4 : w.rain >= 60 ? 3 : w.rain >= 40 ? 2 : w.rain >= 20 ? 1 : 0, txt: w.rain >= 20 ? w.rain + '%' : (w.sunny ? '<span class="uvmini">UV' + w.uv + '</span>' : ''), say: w.rain + '% chance of rain' + (w.sunny ? ', UV ' + w.uv : '') };
+  });
   h += row('Busy', 'var(--brass)', function (d) { return { lv: d.level, txt: (d.n + d.todo) || '', clash: d.clashes.length, say: d.n + ' things, ' + d.todo + ' jobs' }; }, true);
   h += row(s.kids.max.name, s.kids.max.color, function (d) { return { lv: MA.minsLevel(d.max), say: Math.round(d.max) + ' minutes' }; });
   h += row(s.kids.ari.name, s.kids.ari.color, function (d) { return { lv: MA.minsLevel(d.ari), say: Math.round(d.ari) + ' minutes' }; });
@@ -1187,6 +1414,8 @@ function dayBlock(day) {
   var t = today(), s = st(), nm = nowMins(), all = MA.range(S.data, day, day);
   var rows = MA.timeline(S.data, day, S.kid);
   var h = '<div class="dayhead" id="dayTop"><button class="iconbtn" data-act="dayStep" data-n="-1" aria-label="Day before">' + I.left + '</button><h2>' + esc(MA.dayWords(day, t)) + '<small>' + esc(subDate(day)) + (day !== t ? ' · <a href="#" data-act="dayToday">back to today</a>' : '') + '</small></h2><button class="iconbtn" data-act="dayStep" data-n="1" aria-label="Day after">' + I.right + '</button></div>';
+  var dw = S.wx && MA.wxDay(S.wx, day);
+  if (dw) h += '<div class="daywx">' + wxChips(dw) + (dw.when ? '<span class="muted">' + esc(dw.when) + '</span>' : '') + '</div>';
   MA.needsCover(S.data, all, day).forEach(function (c) {
     h += '<button class="alert" data-act="openOcc" data-key="' + esc(c.o.key) + '" data-d="' + day + '">' + ic('suitcase', 18) + '<span>' + esc(pName(c.who)) + ' is away but down to ' + (c.field === 'drop' ? 'drop ' : 'collect ') + esc(kName(c.o.kid)) + ' · ' + esc(c.o.title) + ' (' + MA.time12(c.field === 'drop' ? c.o.start : MA.endOf(c.o)) + '). Tap to hand it over.</span></button>';
   });
@@ -1217,8 +1446,10 @@ function evCard(o, past) {
     '<span class="body"><span class="ttl">' + catTile(o, 16) + '<span>' + esc(o.title) + (o.important ? ' ' + ic('star', 15, 'star') : '') + '</span></span>' +
     '<span class="meta">' + kidPills(o.kid) + (o.place ? '<span class="m">' + ic('map', 13) + esc(o.place) + '</span>' : '') + drvChip(o, 'drop') + drvChip(o, 'pick') +
     (noDrv ? '<span class="drv none">No driver</span>' : '') +
+    (MA.isOutdoor(o) && o.start && S.wx && MA.wxAt(S.wx, o.date, o.start) >= 40 ? '<span class="drv" style="--c:#3A78A8">' + ic('umbrella', 13) + MA.wxAt(S.wx, o.date, o.start) + '% at ' + MA.time12(o.start) + '</span>' : '') +
     (o.series ? '<span class="m" title="Repeats">' + ic('repeat', 13) + '</span>' : '') + (o.changed ? '<span class="tag">Changed this week</span>' : '') +
-    (o.bring && o.bring.length ? '<span class="m">' + ic('bag', 13) + (o.packed || []).length + '/' + o.bring.length + '</span>' : '') + '</span></span></button>';
+    (o.bring && o.bring.length ? '<span class="m">' + ic('bag', 13) + (o.packed || []).length + '/' + o.bring.length + '</span>' : '') +
+    (MA.isPayment(o) ? '<span class="drv" style="--c:' + (o.paid ? 'var(--ok)' : 'var(--brass-dk)') + '">' + ic('coin', 13) + MA.euro(o.money.amount) + (o.paid ? ' paid' : (o.money.method === 'transfer' ? ' transfer' : ' cash')) + '</span>' : '') + '</span></span></button>';
 }
 
 // ------------------------------------------------------------ an occurrence up close
@@ -1240,6 +1471,8 @@ function showOcc(key, day) {
     kv('cal', esc(MA.longDate(o.date)), (o.start ? MA.time12(o.start) + (o.end ? ' – ' + MA.time12(o.end) : '') : 'All day') + (o.changed ? ' · changed from the usual' : '')) +
     (o.series ? kv('repeat', esc(MA.describeRepeat(ev.repeat)), ev.start && o.changed ? 'Usually ' + MA.time12(ev.start) : '') : '') +
     (o.place ? kv('map', esc(o.place), s.places[o.place] ? s.places[o.place] + ' min drive' + (lb ? ' · leave by ' + MA.time12(lb) : '') : '', '<a class="btn small" href="' + mapsUrl(o.place) + '" target="_blank" rel="noopener">Go</a>') : '') +
+    (MA.isPayment(o) ? kv('coin', esc(MA.euro(o.money.amount)) + (o.money.method === 'transfer' ? ' by transfer' : ' in cash') + ' to ' + esc(MA.payee(o)), 'Heads-up ' + MA.headsDays(o, s) + (MA.headsDays(o, s) === 1 ? ' day' : ' days') + ' before' + (o.money.by ? ' · ' + esc(pName(o.money.by)) + ' pays' : '') + (o.paid ? ' · paid by ' + esc(pName(o.paid.by)) : ''),
+      '<button class="tick' + (o.paid ? ' done' : '') + '" style="width:auto;border:0;min-height:0" data-act="paidTick" data-ev="' + esc(o.ev) + '" data-d="' + o.orig + '"><span class="bx">' + I.check + '</span><span class="tx" style="font-size:14px">Paid</span></button>') : '') +
     '<label class="f">Drop off</label>' + driverChips('drop', o.drop) +
     '<label class="f">Collect</label>' + driverChips('pick', o.pick) +
     (o.series ? '<p class="muted" style="font-size:13px;margin:8px 0 0">Changing the driver here changes this one only. Use Edit to change every week.</p>' : '');
@@ -1380,12 +1613,14 @@ var BRING = {
 };
 function blankForm(pre) {
   var t = today();
-  return MA.merge({ title: '', kid: S.kid === 'all' ? '' : S.kid, cat: '', date: S.tab === 'cal' && S.calMode === 'month' ? S.mday : S.day < t ? t : S.day, start: '', end: '', freq: 'none', days: [], until: '', place: '', drop: '', pick: '', bring: [], important: false, alarmMins: 30, notes: '' }, pre || {});
+  return MA.merge({ title: '', kid: S.kid === 'all' ? '' : S.kid, cat: '', date: S.tab === 'cal' && S.calMode === 'month' ? S.mday : S.day < t ? t : S.day, start: '', end: '', freq: 'none', days: [], until: '', place: '', drop: '', pick: '', bring: [], important: false, alarmMins: 30, notes: '', pay: false, amount: '', payTo: '', method: 'cash', heads: st().money.heads || 2, payBy: '' }, pre || {});
 }
 function formFromEvent(ev, o) {
   var src = o || ev, r = ev.repeat || {};
   return { title: src.title || '', kid: src.kid || '', cat: src.cat || '', date: o ? o.date : ev.date, start: src.start || '', end: src.end || '', freq: !r.freq ? 'none' : r.freq === 'weekly' && r.every === 2 ? 'fortnightly' : r.freq,
-    days: (r.days || []).slice(), until: r.until || '', place: src.place || '', drop: src.drop || '', pick: src.pick || '', bring: (src.bring || []).slice(), important: !!src.important, alarmMins: src.alarmMins || 30, notes: src.notes || '' };
+    days: (r.days || []).slice(), until: r.until || '', place: src.place || '', drop: src.drop || '', pick: src.pick || '', bring: (src.bring || []).slice(), important: !!src.important, alarmMins: src.alarmMins || 30, notes: src.notes || '',
+    pay: !!(src.money && +src.money.amount > 0), amount: src.money ? String(src.money.amount || '') : '', payTo: (src.money && src.money.to) || '', method: (src.money && src.money.method) || 'cash',
+    heads: src.money && (src.money.heads || src.money.heads === 0) ? src.money.heads : (st().money.heads || 2), payBy: (src.money && src.money.by) || '' };
 }
 function repeatOf(f) {
   if (f.freq === 'none') return null;
@@ -1400,7 +1635,8 @@ function openEdit(ev, pre, occ) {
   if (!ev && S.form.f.date && !S.form.f.days.length) S.form.f.days = [MA.weekday(S.form.f.date)];
   var h = '<div class="shead"><h2>' + (ev ? 'Edit' : 'Add to the calendar') + '</h2><button class="iconbtn" data-act="closeSheet" aria-label="Close">' + I.x + '</button></div>' +
     (ev ? (occ && occ.series ? '<p class="muted" style="margin:0">From ' + esc(MA.longDate(occ.date)) + '. You\'ll be asked: just this one, or every week.</p>' : '') :
-      '<div class="quick"><div class="hint">' + ic('edit', 14) + ' Type it like you\'d say it</div><input id="qa" autocomplete="off" placeholder="Ari swimming Wed 5pm every week" enterkeyhint="done"></div>') +
+      '<button class="photobtn" data-act="photoPlan">' + ic('sparkle', 18) + '<span><b>From a photo</b><small>Notes, a school letter, fixtures, a screenshot</small></span>' + ic('right', 16) + '</button>' +
+      '<div class="quick"><div class="hint">' + ic('edit', 14) + ' Or type it like you\'d say it</div><input id="qa" autocomplete="off" placeholder="Ari swimming Wed 5pm every week" enterkeyhint="done"></div>') +
     '<div id="formBody"></div><div class="sfoot"><button class="btn" data-act="closeSheet">Cancel</button><button class="btn primary grow" data-act="saveForm">' + I.check + 'Save</button></div>';
   openSheet(h, function (root) {
     drawForm();
@@ -1473,6 +1709,7 @@ function drawForm() {
   h += '<label class="f">Bring</label><div class="tags">' + f.bring.map(function (b, i) { return '<button class="chip on" style="--c:var(--brass)" data-act="fUnbring" data-i="' + i + '">' + esc(b) + ic('x', 14, 'x') + '</button>'; }).join('') + '</div>' +
     '<div class="row" style="margin-top:8px"><input class="in grow" id="fBring" placeholder="Add something to bring" enterkeyhint="done" autocomplete="off"><button class="btn small" data-act="fBringAdd">' + I.plus + '</button></div>' +
     '<div class="sugs">' + Object.keys(bringSug).filter(function (b) { return f.bring.indexOf(b) < 0; }).slice(0, 10).map(function (b) { return '<button data-act="fBringSug" data-v="' + esc(b) + '">+ ' + esc(b) + '</button>'; }).join('') + '</div>';
+  h += moneySection(f);
   h += '<button class="switch' + (f.important ? ' on' : '') + '" data-act="fImp"><span class="tx">' + ic('star', 16, 'star') + ' Very important<small>Alarm-style alert on both phones, a reminder the day before, and it goes on the phone calendar</small></span><span class="sw"></span></button>';
   if (f.important || f.start) h += '<div class="muted" style="font-size:12.5px;margin:0 0 6px">Remind before (plus drive time)</div><div class="chips">' + [10, 15, 30, 60, 120].map(function (m) { return chip(m < 60 ? m + ' min' : m / 60 + ' hr', +f.alarmMins === m, 'fAlarm', { m: m }); }).join('') + '</div>';
   h += '<label class="f" for="fNotes">Notes</label><textarea class="in" id="fNotes" data-f="notes" placeholder="Gate code, teacher\'s name, what to pay…">' + esc(f.notes) + '</textarea>';
@@ -1521,9 +1758,11 @@ Object.assign(ACT, {
 
 // ------------------------------------------------------------ saving
 function fieldsOf(f) {
-  return { title: f.title.trim(), kid: f.kid, cat: f.cat || MA.guessCat(f.title), start: f.start, end: f.start ? f.end : '', place: f.place.trim(), drop: f.drop, pick: f.pick, bring: f.bring.slice(), important: !!f.important, alarmMins: +f.alarmMins || 30, notes: f.notes.trim() };
+  return { title: f.title.trim(), kid: f.kid, cat: f.cat || MA.guessCat(f.title), start: f.start, end: f.start ? f.end : '', place: f.place.trim(), drop: f.drop, pick: f.pick, bring: f.bring.slice(), important: !!f.important, alarmMins: +f.alarmMins || 30, notes: f.notes.trim(), money: moneyOf(f) };
 }
-var ONE_FIELDS = ['title', 'kid', 'cat', 'start', 'end', 'place', 'drop', 'pick', 'bring', 'important', 'alarmMins', 'notes'];
+var ONE_FIELDS = ['title', 'kid', 'cat', 'start', 'end', 'place', 'drop', 'pick', 'bring', 'important', 'alarmMins', 'notes', 'money'];
+// what an event that never had a field counts as, when comparing
+function blankOf(k) { return k === 'bring' ? [] : k === 'important' ? false : k === 'money' ? null : ''; }
 ACT.saveForm = function () {
   var F = S.form; if (!F) return;
   var fb = $('#fBring'); if (fb && fb.value.trim()) F.f.bring.push(fb.value.trim());
@@ -1532,6 +1771,7 @@ ACT.saveForm = function () {
   if (!f.kid) { toast('Who is it for? Tap a name.'); return; }
   if (!MA.isYmd(f.date)) { toast('Pick a date.'); return; }
   if (f.start && f.end && f.end <= f.start) { toast('The finish time is before the start.'); return; }
+  if (f.pay && !moneyOf(f)) { toast('How much is it? Put in the amount, or switch off Needs paying.'); var fa = $('#fAmt'); if (fa) fa.focus(); return; }
   // remember the drive time for this place
   var s = st();
   if (f.place && F.placeTravel !== null && s.places[f.place.trim()] !== F.placeTravel) {
@@ -1553,7 +1793,7 @@ ACT.saveForm = function () {
   }
   // a repeating one, opened from a particular day
   var repChanged = JSON.stringify(normRep(rep, f.date)) !== JSON.stringify(normRep(old.repeat, old.date));
-  var changedOne = f.date !== o.date || ONE_FIELDS.some(function (k) { return JSON.stringify(fields[k]) !== JSON.stringify(o[k] === undefined ? (k === 'bring' ? [] : k === 'important' ? false : '') : o[k]); });
+  var changedOne = f.date !== o.date || ONE_FIELDS.some(function (k) { return JSON.stringify(fields[k]) !== JSON.stringify(o[k] === undefined ? blankOf(k) : o[k]); });
   if (!repChanged && !changedOne) { closeSheet(); return; }
   S.pending = { old: old, o: o, fields: fields, rep: rep, date: f.date };
   openSheet('<div class="shead"><h2>Change which?</h2><button class="iconbtn" data-act="closeSheet">' + I.x + '</button></div><div class="choice">' +
@@ -1567,7 +1807,7 @@ ACT.scope = function (el) {
   if (sc === 'one') {
     ev.over = ev.over || {};
     var ov = {};
-    ONE_FIELDS.forEach(function (k) { if (JSON.stringify(P.fields[k]) !== JSON.stringify(old[k] === undefined ? (k === 'bring' ? [] : k === 'important' ? false : '') : old[k])) ov[k] = P.fields[k]; });
+    ONE_FIELDS.forEach(function (k) { if (JSON.stringify(P.fields[k]) !== JSON.stringify(old[k] === undefined ? blankOf(k) : old[k])) ov[k] = P.fields[k]; });
     if (P.date !== o.orig) ov.date = P.date;
     if (Object.keys(ov).length) ev.over[o.orig] = ov; else delete ev.over[o.orig];
     queue('saveEvent', { event: ev, base: old.updated, change: { what: 'Changed one', text: kName(ev.kid) + ' ' + (P.fields.title || ev.title) + ' on ' + MA.shortDate(o.orig) + ': ' + describeOne(ov) } });
@@ -1680,6 +1920,7 @@ function viewLists() {
   var old = all.filter(function (l) { return l.kind === 'away' && l.to && l.to < t; });
   var h = '<h1 class="hello">Lists</h1><p class="sub">Tick as you go. The other phone sees it straight away.</p>';
   if (away.length) h += '<div class="sec">Away plans</div>' + away.map(awayCard).join('');
+  h += '<button class="photobtn" style="margin:12px 16px 0;width:calc(100% - 32px)" data-act="photoPlan">' + ic('sparkle', 18) + '<span><b>Photo to plan</b><small>Photograph handwritten notes or a letter and it makes the list for you</small></span>' + ic('right', 16) + '</button>';
   h += '<button class="hero-away" data-act="newAway"><span class="tile big" style="--tc:var(--brass)">' + ic('suitcase', 24) + '</span><span class="grow"><b>Going away for a few days?</b><span>Make a day-by-day plan with tick boxes. The boys\' activities go in by themselves.</span></span>' + ic('plus', 20) + '</button>';
   if (routines.length) h += '<div class="sec">Every day<span class="r">unticks each morning</span></div><div class="lgrid">' + routines.map(lcard).join('') + '</div>';
   h += '<div class="sec">Checklists</div><div class="lgrid">' + lists.map(lcard).join('') + '<button class="lcard new" data-act="newList">' + ic('plus', 26) + 'New list</button></div>';
@@ -1967,6 +2208,7 @@ function viewMore() {
     '<button class="switch' + (s.seriesEmail ? ' on' : '') + '" data-act="toggleSet" data-k="seriesEmail"><span class="tx">Email us both when a repeating thing changes<small>New, moved, stopped or deleted — so nobody misses it</small></span><span class="sw"></span></button>' +
     '<button class="btn small" data-act="testEmail">' + I.mail + 'Send me tomorrow\'s email now</button></div>';
 
+  h += geminiCard() + moneySettingsCard() + placesCard() + busesCard() + weatherCard();
   var gm = s.gcal.mode;
   h += '<div class="card"><h3>' + ic('cal', 15) + ' Phone calendar</h3>' +
     '<p style="margin:0 0 10px;font-size:14.5px">Puts things on a Google calendar called <b>Max &amp; Ari</b>. Samsung Calendar shows Google calendars, so it lands on both phones with their normal reminders.</p>' +
@@ -2135,6 +2377,7 @@ function start() {
   var th = store.get('ma-theme', ''); if (th) document.documentElement.setAttribute('data-theme', th);
   if (window.MA_BACKEND && !S.conn) { S.conn = { url: 'preview', pw: 'preview' }; }
   render();
+  wxLoad(false);
   if (S.conn) { flush(); reload(true); }
   document.addEventListener('visibilitychange', function () { if (!document.hidden && S.conn) { flush(); reload(true); if (S.tab === 'home' && !S.sheetOpen) softRender(); } });
   window.addEventListener('online', function () { flush(); reload(true); });
@@ -2143,6 +2386,705 @@ function start() {
   setInterval(function () { if (!document.hidden && S.tab === 'home' && !S.sheetOpen && !(document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName))) { if (S.day < today()) S.day = today(); render(); } }, 60000);
   if ('serviceWorker' in navigator && !window.MA_BACKEND && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(function () { });
   setTimeout(showInstallOffer, 2500);
+}
+
+// ============================================================ Money (Lisa, Trish, fees) and Photo to plan
+// ------------------------------------------------------------ money on Home
+function moneyCard() {
+  var t = today(), s = st(), due = MA.moneyDue(S.data, t, 7);
+  var hasAny = (S.data.events || []).some(function (e) { return !e.deleted && e.money && +e.money.amount > 0; });
+  if (!hasAny) {
+    return '<button class="moneyhint" data-act="payAdd">' + ic('coin', 20) + '<span class="grow"><b>Money reminders</b><small>Set up Lisa, Trish and anything else you pay. You get a heads-up 2 days before, so the wallet comes with you.</small></span>' + ic('plus', 18) + '</button>';
+  }
+  if (!due.length) return '';
+  var now = due.filter(function (m) { return m.now; }), cash = now.filter(function (m) { return m.cash; }).reduce(function (a, m) { return a + m.amount; }, 0);
+  var h = '<div class="card money"><h3>' + ic('coin', 15) + ' Money<span class="r">' + (cash ? MA.euro(cash) + ' cash needed soon' : 'next 7 days') + '</span></h3>';
+  if (cash) {
+    var cashNow = now.filter(function (m) { return m.cash; }), last = cashNow[cashNow.length - 1], by = last.late || last.left <= 0 ? 'today' : last.left === 1 ? 'tomorrow' : MA.WDL[MA.weekday(last.o.date)];
+    h += '<div class="wallet">' + ic('coin', 18) + '<span><b>Bring your wallet.</b> ' + esc(MA.euro(cash)) + ' in cash ' + (cashNow.length === 1 ? 'for ' + esc(MA.payee(last.o)) + ' ' + (by === 'today' || by === 'tomorrow' ? by : 'on ' + by) : 'by ' + by) + '.</span></div>';
+  }
+  h += due.map(payRow).join('');
+  return h + '<button class="btn small" style="margin-top:10px" data-act="payAdd">' + I.plus + 'Payment</button></div>';
+}
+function payRow(m) {
+  var o = m.o, when = m.late ? 'was due ' + MA.shortDate(o.date) : m.left === 0 ? 'Today' : m.left === 1 ? 'Tomorrow' : MA.dayWords(o.date, today());
+  return '<div class="row payrow' + (m.now ? ' now' : '') + (m.late ? ' late' : '') + '"><button class="tick' + (o.paid ? ' done' : '') + '" data-act="paidTick" data-ev="' + esc(o.ev) + '" data-d="' + o.orig + '"><span class="bx">' + I.check + '</span>' +
+    '<span class="tx">' + esc(MA.payee(o)) + '<small>' + esc(when) + (m.cash ? ' · cash' : ' · transfer') + (o.money.by ? ' · ' + esc(pName(o.money.by)) : '') + '</small></span><span class="amt num">' + esc(MA.euro(m.amount)) + '</span></button>' +
+    '<button class="iconbtn plain" data-act="openOcc" data-key="' + esc(o.key) + '" data-d="' + o.date + '" aria-label="Details">' + ic('dots', 18) + '</button></div>';
+}
+ACT.paidTick = function (el) {
+  var on = !el.classList.contains('done');
+  el.classList.toggle('done', on); if (on) { el.querySelector('.bx').classList.add('pop'); if (navigator.vibrate) navigator.vibrate(15); }
+  queue('paid', { eventId: el.getAttribute('data-ev'), date: el.getAttribute('data-d'), on: on }, true);
+  if (on) toast('Paid. No more reminders for that one.');
+  if (S.sheetOpen && S.detailKey) setTimeout(function () { showOcc(S.detailKey, S.detailDay); }, 10);
+};
+// the regular ones he named, plus anything else
+ACT.payAdd = function () {
+  var existing = {};
+  (S.data.events || []).forEach(function (e) { if (!e.deleted && e.money && e.money.to) existing[e.money.to.toLowerCase()] = e; });
+  var opts = [['Lisa', 'Cleaner', 'home'], ['Trish', 'Childminder', 'users']].filter(function (x) { return !existing[x[0].toLowerCase()]; });
+  var mine = Object.keys(existing).map(function (k) { return existing[k]; });
+  openSheet('<div class="shead"><h2>Money</h2><button class="iconbtn" data-act="closeSheet">' + I.x + '</button></div>' +
+    '<p class="muted" style="margin:0 0 6px">You get a heads-up by email and on the phone, at 7am, 2 days before it is due, until someone ticks it paid.</p>' +
+    (mine.length ? '<label class="f">Set up already</label>' + mine.map(function (e) { return '<button class="payset" data-act="payEdit" data-id="' + esc(e.id) + '">' + ic('coin', 18) + '<span class="grow"><b>' + esc(e.money.to) + '</b> ' + esc(MA.euro(e.money.amount)) + '<small>' + esc(e.repeat && e.repeat.freq ? MA.describeRepeat(e.repeat) : MA.shortDate(e.date)) + (e.money.method === 'transfer' ? ' · transfer' : ' · cash') + '</small></span>' + ic('edit', 16) + '</button>'; }).join('') : '') +
+    '<label class="f">Add</label><div class="choice" style="margin-top:0">' +
+    opts.map(function (x) { return '<button class="btn" data-act="payPreset" data-to="' + x[0] + '" data-what="' + x[1] + '">' + ic(x[2], 22) + '<span>' + x[0] + '<small>' + x[1] + ', every week</small></span></button>'; }).join('') +
+    '<button class="btn" data-act="payPreset" data-to="" data-what="">' + ic('coin', 22) + '<span>Something else<small>Fees, a deposit, a party, a one-off</small></span></button></div>');
+};
+ACT.payEdit = function (el) { var e = find(S.data.events, el.getAttribute('data-id')); if (e) openEdit(e, null, e.repeat && e.repeat.freq ? MA.occurrences(e, today(), MA.addDays(today(), 40))[0] : null); };
+ACT.payPreset = function (el) {
+  var to = el.getAttribute('data-to'), what = el.getAttribute('data-what'), t = today();
+  openEdit(null, { title: to ? 'Pay ' + to + (what ? ' (' + what.toLowerCase() + ')' : '') : '', kid: 'family', cat: 'money', date: t, pay: true, payTo: to, method: 'cash', heads: st().money.heads || 2, freq: to ? 'weekly' : 'none', days: [MA.weekday(t)] });
+  if (to) setTimeout(function () { toast('Put in the amount and the day it is paid.'); var a = $('[data-money]'); if (a) a.focus(); }, 350);
+};
+
+// ------------------------------------------------------------ money on the add / edit form
+function moneySection(f) {
+  var s = st();
+  var h = '<button class="switch' + (f.pay ? ' on' : '') + '" data-act="fPay"><span class="tx">' + ic('coin', 16) + ' Needs paying<small>A heads-up before it is due, so the wallet comes with you</small></span><span class="sw"></span></button>';
+  if (!f.pay) return h;
+  var payees = {};
+  (S.data.events || []).forEach(function (e) { if (e.money && e.money.to) payees[e.money.to] = 1; });
+  ['Lisa', 'Trish'].forEach(function (p) { payees[p] = 1; });
+  h += '<div class="two"><div><label class="f" for="fAmt">How much (€)</label><input class="in big num" id="fAmt" data-money="amount" inputmode="decimal" autocomplete="off" placeholder="0" value="' + esc(groupMoney(f.amount)) + '"></div>' +
+    '<div><label class="f" for="fPayTo">Paid to</label><input class="in" id="fPayTo" data-f="payTo" list="payeeList" autocomplete="off" placeholder="Lisa, Trish, the club…" value="' + esc(f.payTo) + '"><datalist id="payeeList">' + Object.keys(payees).map(function (p) { return '<option value="' + esc(p) + '">'; }).join('') + '</datalist></div></div>';
+  h += '<div class="chips" style="margin-top:10px">' + chip(ic('coin', 15) + 'Cash', f.method !== 'transfer', 'fMethod', { v: 'cash' }, 'var(--ok)') + chip(ic('share', 15) + 'Bank transfer', f.method === 'transfer', 'fMethod', { v: 'transfer' }, 'var(--dad)') + '</div>';
+  h += '<div class="muted" style="font-size:12.5px;margin:12px 0 6px">Heads-up</div><div class="chips">' + [1, 2, 3, 5].map(function (d) { return chip(d + (d === 1 ? ' day' : ' days') + ' before', +f.heads === d, 'fHeads', { d: d }); }).join('') + '</div>';
+  h += '<div class="muted" style="font-size:12.5px;margin:12px 0 6px">Who pays</div><div class="chips">' + chip('Either of us', !f.payBy, 'fPayBy', { p: '' }) + chip(esc(s.parents.dad.name), f.payBy === 'dad', 'fPayBy', { p: 'dad' }, 'var(--dad)') + chip(esc(s.parents.mum.name), f.payBy === 'mum', 'fPayBy', { p: 'mum' }, 'var(--mum)') + '</div>';
+  return h;
+}
+Object.assign(ACT, {
+  fPay: function () { var f = S.form.f; f.pay = !f.pay; if (f.pay && !f.heads) f.heads = st().money.heads || 2; drawForm(); if (f.pay) setTimeout(function () { var a = $('#fAmt'); if (a) a.focus(); }, 50); },
+  fMethod: function (el) { S.form.f.method = el.getAttribute('data-v'); drawForm(); },
+  fHeads: function (el) { S.form.f.heads = +el.getAttribute('data-d'); drawForm(); },
+  fPayBy: function (el) { S.form.f.payBy = el.getAttribute('data-p'); drawForm(); }
+});
+// 1234567 shows as 1,234,567 while typing; the caret stays where it was, counted from the end
+function groupMoney(v) {
+  v = String(v == null ? '' : v).replace(/[^\d.]/g, '');
+  var dot = v.indexOf('.'), whole = dot >= 0 ? v.slice(0, dot) : v, dec = dot >= 0 ? v.slice(dot + 1).replace(/\./g, '').slice(0, 2) : null;
+  whole = whole.replace(/^0+(?=\d)/, '');
+  return whole.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (dec !== null ? '.' + dec : '');
+}
+document.addEventListener('input', function (e) {
+  var el = e.target, k = el.getAttribute && el.getAttribute('data-money');
+  if (!k) return;
+  var fromEnd = el.value.length - (el.selectionEnd || el.value.length), shown = groupMoney(el.value);
+  el.value = shown;
+  var pos = Math.max(0, shown.length - fromEnd);
+  try { el.setSelectionRange(pos, pos); } catch (er) { }
+  if (S.form) S.form.f[k] = shown.replace(/,/g, '');
+});
+function moneyOf(f) {
+  var amt = Math.round((parseFloat(String(f.amount || '').replace(/,/g, '')) || 0) * 100) / 100;
+  if (!f.pay || !(amt > 0)) return null;
+  return { amount: amt, to: String(f.payTo || '').trim(), method: f.method === 'transfer' ? 'transfer' : 'cash', heads: +f.heads || 2, by: f.payBy || '' };
+}
+
+// ------------------------------------------------------------ Photo to plan
+ACT.photoPlan = function () {
+  S.photos = []; S.photoNote = '';
+  drawPhotoPick();
+};
+function drawPhotoPick(msg) {
+  var on = !!S.data.gemini;
+  var h = '<div class="shead"><span class="tile big" style="--tc:var(--brass)">' + ic('sparkle', 24) + '</span><h2>Photo to plan</h2><button class="iconbtn" data-act="closeSheet">' + I.x + '</button></div>' +
+    '<p class="muted" style="margin:4px 0 12px">Photograph notes, a school letter, fixtures or a WhatsApp screenshot. It reads them and shows you the plan to check before anything is added.</p>';
+  if (!on) {
+    h += '<div class="card flat" style="margin:0"><b>Photo reading isn\'t switched on yet.</b><p class="muted" style="margin:6px 0 10px;font-size:14px">It needs a free Gemini key, pasted in once.</p><button class="btn primary small" data-act="goGemini">Set it up</button></div>';
+    openSheet(h); return;
+  }
+  h += '<label class="photopick">' + ic('cal', 22) + '<b>' + (S.photos.length ? 'Add more photos' : 'Take or choose photos') + '</b><small>One page each is fine. Up to 8.</small><input type="file" id="photoIn" accept="image/*" multiple hidden></label>';
+  if (S.photos.length) h += '<div class="thumbs">' + S.photos.map(function (p, i) { return '<div class="thumb"><img src="' + p.url + '" alt="Photo ' + (i + 1) + '"><button data-act="photoDrop" data-i="' + i + '" aria-label="Remove">' + ic('x', 14) + '</button><span>' + (i + 1) + '</span></div>'; }).join('') + '</div>';
+  h += '<label class="f" for="photoNote">Anything it should know? (optional)</label><input class="in" id="photoNote" placeholder="e.g. Laura away Thursday to Sunday" value="' + esc(S.photoNote || '') + '">';
+  h += '<p class="err" style="color:var(--warn);font-weight:600;min-height:20px;margin:10px 0 0">' + esc(msg || '') + '</p>';
+  h += '<div class="sfoot"><button class="btn" data-act="closeSheet">Cancel</button><button class="btn primary grow" data-act="photoRead"' + (S.photos.length ? '' : ' disabled') + '>' + ic('sparkle', 18) + 'Read ' + (S.photos.length > 1 ? 'them' : 'it') + '</button></div>';
+  h += '<p class="muted" style="font-size:12px;margin:10px 0 0">Photos go to Google Gemini to be read. On the free plan Google may use them to improve its service, so skip anything private.</p>';
+  openSheet(h, function (root) {
+    var inp = $('#photoIn', root);
+    inp.addEventListener('change', function () {
+      S.photoNote = ($('#photoNote') || {}).value || S.photoNote;
+      [].slice.call(inp.files || []).slice(0, 8 - S.photos.length).forEach(function (file) { S.photos.push({ file: file, url: URL.createObjectURL(file) }); });
+      drawPhotoPick();
+    });
+  });
+}
+ACT.photoDrop = function (el) { S.photoNote = ($('#photoNote') || {}).value || ''; var p = S.photos.splice(+el.getAttribute('data-i'), 1)[0]; if (p) URL.revokeObjectURL(p.url); drawPhotoPick(); };
+ACT.goGemini = function () { closeSheet(); go('more'); setTimeout(function () { var c = $('#geminiCard'); if (c) c.scrollIntoView({ block: 'start' }); }, 80); };
+// phones take huge photos: shrink to 2000px on the long side, as JPEG, before sending
+function shrinkPhoto(file) {
+  return new Promise(function (res, rej) {
+    var url = URL.createObjectURL(file), img = new Image();
+    img.onload = function () {
+      var sc = Math.min(1, 2000 / Math.max(img.naturalWidth, img.naturalHeight)), c = document.createElement('canvas');
+      c.width = Math.round(img.naturalWidth * sc); c.height = Math.round(img.naturalHeight * sc);
+      var g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      res({ mime: 'image/jpeg', data: c.toDataURL('image/jpeg', 0.82).split(',')[1] });
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); rej(new Error('That photo could not be opened. On a Samsung, set the camera to save JPEG rather than HEIF.')); };
+    img.src = url;
+  });
+}
+ACT.photoRead = function (el) {
+  if (!S.photos.length) return;
+  S.photoNote = ($('#photoNote') || {}).value || '';
+  el.disabled = true; el.innerHTML = 'Reading…';
+  var err = $('#sheetBody .err'), t0 = Date.now();
+  var tick = setInterval(function () { var s = Math.round((Date.now() - t0) / 1000); if (err) err.style.color = 'var(--muted)', err.textContent = 'Reading ' + S.photos.length + (S.photos.length > 1 ? ' photos' : ' photo') + '… ' + s + 's (usually 10 to 40 seconds)'; }, 1000);
+  Promise.all(S.photos.map(function (p) { return shrinkPhoto(p.file); }))
+    .then(function (images) { return api('readPhoto', { images: images, note: S.photoNote }, 190000); })
+    .then(function (r) { clearInterval(tick); S.plan = preparePlan(r.plan); drawReview(); }, function (e) {
+      clearInterval(tick);
+      drawPhotoPick(e.server ? e.message : (!navigator.onLine ? 'No internet just now.' : e.name === 'AbortError' ? 'That took too long. Try fewer photos at a time.' : e.message || 'That did not work. Try again.'));
+    });
+};
+
+// the checked plan: activities already on the calendar start unticked; known activities fill in their usual details
+function preparePlan(p) {
+  var existing = MA.range(S.data, MA.addDays(today(), -7), MA.addDays(today(), 200));
+  p.events.forEach(function (e, i) {
+    e.id = 'pe' + i;
+    var dup = existing.filter(function (o) { return o.date === e.date && o.title.toLowerCase() === e.title.toLowerCase() && (!e.start || !o.start || o.start === e.start); })[0];
+    e.dup = !!dup; e.on = !dup;
+    var known = remembered(e.title).filter(function (x) { return x.title.toLowerCase() === e.title.toLowerCase() && (x.kid === e.kid || e.kid === 'both'); })[0];
+    if (known) {
+      e.cat = known.cat;
+      if (!e.place) e.place = known.place || '';
+      if (!e.bring.length && known.bring) e.bring = known.bring.slice();
+      if (!e.end && known.end && known.start && e.start) e.end = MA.fromMins(MA.mins(e.start) + MA.mins(known.end) - MA.mins(known.start));
+      if (!e.drop) e.drop = known.drop || ''; if (!e.pick) e.pick = known.pick || '';
+      if (known.repeat && known.repeat.freq) { e.weekly = false; e.knownSeries = true; }
+    } else e.cat = MA.guessCat(e.title);
+  });
+  p.jobs.forEach(function (j, i) { j.id = 'pj' + i; j.on = true; });
+  p.payments.forEach(function (m, i) { m.id = 'pm' + i; m.on = m.amount > 0 && !!m.date; });
+  p.useAway = !!p.away;
+  return p;
+}
+function drawReview() {
+  var p = S.plan, s = st(), t = today(), n = 0;
+  var h = '<div class="shead"><span class="tile big" style="--tc:var(--brass)">' + ic('sparkle', 24) + '</span><h2>Here\'s what I read</h2><button class="iconbtn" data-act="closeSheet">' + I.x + '</button></div>' +
+    (p.summary ? '<p class="muted" style="margin:2px 0 10px">' + esc(p.summary) + '</p>' : '');
+  if (p.questions.length) h += '<div class="alert" style="margin:8px 0">' + ic('alert', 18) + '<span><b>Worth checking</b><br>' + p.questions.map(esc).join('<br>') + '</span></div>';
+  if (p.away) h += '<button class="switch' + (p.useAway ? ' on' : '') + '" data-act="pvAway"><span class="tx">' + ic('suitcase', 16) + ' Make it an away plan<small>' + esc(pName(p.away.who)) + ' away, ' + esc(MA.shortDate(p.away.from)) + ' to ' + esc(MA.shortDate(p.away.to)) + '</small></span><span class="sw"></span></button>';
+  if (p.events.length) {
+    h += '<div class="lday"><span>On the calendar</span><span class="r">' + p.events.filter(function (e) { return e.on; }).length + ' of ' + p.events.length + '</span></div>';
+    p.events.forEach(function (e) {
+      var meta = [e.place, e.drop ? pName(e.drop) + ' drops' : '', e.pick ? pName(e.pick) + ' collects' : '', e.bring.length ? 'Bring ' + e.bring.join(', ') : '', e.amount ? MA.euro(e.amount) + ' to pay' : ''].filter(String).join(' · ');
+      h += '<div class="row"><button class="tick pick' + (e.on ? ' done' : '') + '" data-act="pvTog" data-k="events" data-id="' + e.id + '"><span class="bx">' + I.check + '</span><span class="ii">' + ic((MA.CATS[e.cat] || MA.CATS.other).icon, 17) + '</span>' +
+        '<span class="tx">' + esc(e.title) + ' ' + kidPills(e.kid) + (e.weekly ? ' <span class="pill soft" style="--c:var(--brass)">every week</span>' : '') +
+        '<small>' + esc(MA.dayWords(e.date, t) + (MA.dayWords(e.date, t).indexOf(' ') < 0 ? ' ' + MA.shortDate(e.date).slice(4) : '')) + (e.start ? ' · ' + MA.time12(e.start) + (e.end ? ' – ' + MA.time12(e.end) : '') : '') + (meta ? ' · ' + esc(meta) : '') + (e.dup ? ' · already on the calendar' : '') + '</small>' +
+        (e.notes ? '<small>' + esc(e.notes) + '</small>' : '') + '</span></button></div>';
+      if (e.on) n++;
+    });
+  }
+  if (p.jobs.length) {
+    var days = {};
+    p.jobs.forEach(function (j) { (days[j.day || ''] = days[j.day || ''] || []).push(j); });
+    Object.keys(days).sort(function (a, b) { return !a ? 1 : !b ? -1 : a < b ? -1 : 1; }).forEach(function (d) {
+      h += '<div class="lday"><span>' + (d ? esc(MA.dayWords(d, t)) : 'Any time') + '</span>' + (d ? '<em>' + esc(subDate(d)) + '</em>' : '') + '<span class="r">' + days[d].filter(function (j) { return j.on; }).length + '/' + days[d].length + '</span></div>';
+      days[d].forEach(function (j) {
+        var icn = itemIcon(j.text);
+        h += '<div class="row"><button class="tick pick' + (j.on ? ' done' : '') + '" data-act="pvTog" data-k="jobs" data-id="' + j.id + '"><span class="bx">' + I.check + '</span><span class="ii">' + (icn ? ic(icn, 17) : '') + '</span><span class="tx">' + esc(j.text) + (j.important ? ' ' + ic('star', 13, 'star') : '') +
+          ((j.time || j.kid) ? '<small>' + [j.time ? MA.time12(j.time) : '', j.kid ? kName(j.kid) : ''].filter(String).join(' · ') + '</small>' : '') + '</span></button></div>';
+        if (j.on) n++;
+      });
+    });
+  }
+  if (p.payments.length) {
+    h += '<div class="lday"><span>Money</span></div>';
+    p.payments.forEach(function (m) {
+      h += '<div class="row"><button class="tick pick' + (m.on ? ' done' : '') + '" data-act="pvTog" data-k="payments" data-id="' + m.id + '"><span class="bx">' + I.check + '</span><span class="ii">' + ic('coin', 17) + '</span><span class="tx">' + esc(m.what) + (m.to ? ' (' + esc(m.to) + ')' : '') +
+        '<small>' + (m.amount ? MA.euro(m.amount) : 'no amount written') + (m.date ? ' · ' + esc(MA.shortDate(m.date)) : ' · no date') + (m.amount && m.date ? ' · heads-up ' + (s.money.heads || 2) + ' days before' : ' · goes in as a job') + '</small></span></button></div>';
+      if (m.on) n++;
+    });
+  }
+  if (!p.events.length && !p.jobs.length && !p.payments.length) h += '<div class="empty"><b>Nothing to add</b>It couldn\'t find dates or jobs in that. Try a clearer photo.</div>';
+  h += '<div class="sfoot"><button class="btn" data-act="photoPlan">Start again</button><button class="btn primary grow" data-act="pvSave"' + (n ? '' : ' disabled') + '>' + I.check + 'Add ' + n + (n === 1 ? ' thing' : ' things') + '</button></div>';
+  var keep = $('#sheet .panel') ? $('#sheet .panel').scrollTop : 0;
+  openSheet(h);
+  if (S.plan.redraw) $('#sheet .panel').scrollTop = keep;
+  S.plan.redraw = true;
+}
+ACT.pvTog = function (el) {
+  var arr = S.plan[el.getAttribute('data-k')], x = arr.filter(function (y) { return y.id === el.getAttribute('data-id'); })[0];
+  if (x) x.on = !x.on;
+  drawReview();
+};
+ACT.pvAway = function () { S.plan.useAway = !S.plan.useAway; drawReview(); };
+ACT.pvSave = function () {
+  var p = S.plan, s = st(), t = today(), added = { ev: 0, jobs: 0, pay: 0 }, created = Date.now();
+  p.events.filter(function (e) { return e.on; }).forEach(function (e) {
+    var ev = { id: MA.uid('e'), title: e.title, kid: e.kid, cat: e.cat || MA.guessCat(e.title), date: e.date, start: e.start, end: e.end, place: e.place, bring: e.bring, drop: e.drop, pick: e.pick,
+      important: e.important, alarmMins: 30, notes: e.notes, repeat: e.weekly ? { freq: 'weekly', every: 1, days: [MA.weekday(e.date)], until: '' } : null, skip: {}, over: {}, created: created,
+      money: e.amount ? { amount: e.amount, to: '', method: 'cash', heads: s.money.heads || 2, by: '' } : null };
+    queue('saveEvent', { event: ev, isNew: true, change: { what: 'Added from a photo', text: kName(ev.kid) + ' ' + ev.title + ' ' + MA.shortDate(ev.date) } }, true);
+    added.ev++;
+  });
+  p.payments.filter(function (m) { return m.on && m.amount && m.date; }).forEach(function (m) {
+    var ev = { id: MA.uid('e'), title: m.to ? 'Pay ' + m.to : m.what, kid: 'family', cat: 'money', date: m.date, start: '', end: '', place: '', bring: [], drop: '', pick: '', important: false, alarmMins: 30,
+      notes: m.to ? m.what : '', repeat: null, skip: {}, over: {}, created: created, money: { amount: m.amount, to: m.to || m.what, method: m.cash === false ? 'transfer' : 'cash', heads: s.money.heads || 2, by: '' } };
+    queue('saveEvent', { event: ev, isNew: true, change: { what: 'Added from a photo', text: 'Pay ' + ev.money.to + ' ' + MA.euro(m.amount) } }, true);
+    added.pay++;
+  });
+  var items = p.jobs.filter(function (j) { return j.on; }).map(function (j) { return { id: MA.uid('i'), text: j.text, time: j.time, after: j.after || '', day: j.day, kid: j.kid, important: j.important, doneOn: '' }; });
+  p.payments.filter(function (m) { return m.on && !(m.amount && m.date); }).forEach(function (m) { items.push({ id: MA.uid('i'), text: m.what + (m.to ? ' (' + m.to + ')' : '') + (m.amount ? ' ' + MA.euro(m.amount) : ''), time: '', day: m.date, kid: '', important: true, doneOn: '' }); });
+  var listId = '';
+  if (items.length) {
+    var l;
+    if (p.away && p.useAway) l = { id: MA.uid('l'), title: pName(p.away.who) + ' away', kind: 'away', away: p.away.who, for: other(p.away.who), from: p.away.from, to: p.away.to, icon: 'suitcase', items: items, created: created };
+    else l = { id: MA.uid('l'), title: 'From a photo · ' + MA.shortDate(t), kind: 'list', icon: 'sparkle', items: items, created: created };
+    S.data.lists.push(l); listId = l.id;
+    queue('saveList', { list: l, change: { what: 'From a photo', text: l.title + ', ' + items.length + ' jobs' } }, true);
+    added.jobs = items.length;
+  }
+  S.photos.forEach(function (x) { URL.revokeObjectURL(x.url); }); S.photos = []; S.plan = null;
+  closeSheet(); render();
+  toast('Added ' + [added.ev ? added.ev + (added.ev === 1 ? ' activity' : ' activities') : '', added.jobs ? added.jobs + (added.jobs === 1 ? ' job' : ' jobs') : '', added.pay ? added.pay + (added.pay === 1 ? ' payment' : ' payments') : ''].filter(String).join(', '));
+  if (listId && p.away && p.useAway) setTimeout(function () { S.listId = listId; S.editItem = null; openSheet('<div id="listBox"></div>', function () { drawList(); scrollToToday(); }); }, 400);
+};
+
+// ------------------------------------------------------------ "Us": photo key and money settings
+function geminiCard() {
+  var on = !!S.data.gemini;
+  return '<div class="card" id="geminiCard"><h3>' + ic('sparkle', 15) + ' Photo to plan</h3>' +
+    (on ? '<p style="margin:0 0 10px;font-size:14.5px">On. Tap <b>+</b> then <b>From a photo</b>, or use it from Lists.</p><div class="acts"><button class="btn small" data-act="photoPlan">' + ic('sparkle', 17) + 'Try it</button><button class="btn small danger" data-act="geminiOff">Turn off</button></div>' :
+      '<p style="margin:0 0 8px;font-size:14.5px">Reads photos of notes and letters into the calendar. It needs a free Gemini key, once:</p>' +
+      '<ol style="margin:0 0 10px;padding-left:20px;font-size:14px;line-height:1.6"><li>Open <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">Google AI Studio</a> and sign in with your Google account.</li><li>Tap <b>Create API key</b> and copy it (it starts AIza).</li><li>Paste it here.</li></ol>' +
+      '<div class="row"><input class="in grow" id="gKey" placeholder="AIza…" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="btn primary small" data-act="geminiSave">Save</button></div>' +
+      '<p class="muted" style="font-size:12.5px;margin:8px 0 0">The key is kept in your Apps Script, never on the phones. You can use the same key as Get It Done.</p>') + '</div>';
+}
+function moneySettingsCard() {
+  var s = st();
+  return '<div class="card"><h3>' + ic('coin', 15) + ' Money reminders</h3><p style="margin:0 0 8px;font-size:14.5px">An email' + (s.ntfy.on ? ' and a phone alert' : '') + ' in the morning, from the heads-up day until someone ticks it paid.</p>' +
+    '<div class="muted" style="font-size:12.5px;margin:6px 0">Time</div><div class="chips">' + [6, 7, 8, 9].map(function (hr) { return '<button class="chip' + (+s.money.hour === hr ? ' on' : '') + '" data-act="moneyHour" data-h="' + hr + '">' + MA.time12(MA.pad(hr) + ':00') + '</button>'; }).join('') + '</div>' +
+    '<div class="muted" style="font-size:12.5px;margin:12px 0 6px">Heads-up for new payments</div><div class="chips">' + [1, 2, 3].map(function (d) { return '<button class="chip' + (+s.money.heads === d ? ' on' : '') + '" data-act="moneyHeads" data-d="' + d + '">' + d + (d === 1 ? ' day' : ' days') + '</button>'; }).join('') + '</div>' +
+    '<button class="btn small" style="margin-top:12px" data-act="payAdd">' + ic('coin', 17) + 'Lisa, Trish and other payments</button></div>';
+}
+Object.assign(ACT, {
+  geminiSave: function (el) {
+    var k = ($('#gKey') || {}).value || '';
+    if (!k.trim()) { toast('Paste the key first.'); return; }
+    el.disabled = true; el.textContent = 'Checking…';
+    flush().then(function () { return api('setGeminiKey', { key: k.trim() }); }).then(function () { S.data.gemini = true; saveCache(); toast('Photo reading is on.'); render(); }, function (e) { el.disabled = false; el.textContent = 'Save'; toast(e.message); });
+  },
+  geminiOff: function (el) {
+    if (el.getAttribute('data-sure') !== '1') { el.setAttribute('data-sure', '1'); el.textContent = 'Tap again to turn off'; return; }
+    api('setGeminiKey', { key: '' }).then(function () { S.data.gemini = false; saveCache(); render(); }, function (e) { toast(e.message); });
+  },
+  moneyHour: function (el) { saveSet({ money: { hour: +el.getAttribute('data-h') } }, 'Money reminders at ' + MA.time12(MA.pad(+el.getAttribute('data-h')) + ':00')); },
+  moneyHeads: function (el) { saveSet({ money: { heads: +el.getAttribute('data-d') } }); }
+});
+
+// ============================================================ weather: umbrella + chance of rain, sun + UV for sunscreen
+// Today's forecast in the morning and afternoon, tomorrow's from 4pm. Straight from Open-Meteo (free, no key),
+// kept for an hour on the phone so it opens instantly.
+ICON.umbrella = '<path d="M3 12a9 9 0 0 1 18 0z"/><path d="M12 12v6.5a2 2 0 0 1-4 0"/><path d="M12 2v1"/>';
+ICON.cloud = '<path d="M7 18h10a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.1 9.6 4.2 4.2 0 0 0 7 18z"/>';
+S.wx = null;
+function wxLoad(force) {
+  var s = st();
+  if (!s.weather || s.weather.on === false) { S.wx = null; return; }
+  var url = MA.wxUrl(s), c = store.get('ma-wx', null);
+  if (c && c.url === url) S.wx = MA.parseWx(c.j);
+  if (!force && c && c.url === url && Date.now() - c.at < 3600e3) return;
+  if (!window.fetch || !navigator.onLine) return;
+  fetch(url).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
+    if (!j || !j.daily) return;
+    store.set('ma-wx', { at: Date.now(), url: url, j: j });
+    var had = !!S.wx; S.wx = MA.parseWx(j);
+    if (S.tab === 'home' && !had) softRender();
+  }).catch(function () { });
+}
+function wxChips(w, big) {
+  if (!w) return '';
+  var h = '';
+  if (w.wet) h += '<span class="wx rain' + (w.rain >= 50 ? ' hi' : '') + '">' + ic('umbrella', big ? 20 : 15) + '<b>' + w.rain + '%</b>' + (big && w.when ? '<small>' + esc(w.when) + '</small>' : '') + '</span>';
+  if (w.sunny) h += '<span class="wx sun">' + ic('sun', big ? 20 : 15) + '<b>UV ' + w.uv + '</b>' + (big ? '<small>sunscreen</small>' : '') + '</span>';
+  if (!w.wet && !w.sunny) h += '<span class="wx dry">' + ic('cloud', big ? 20 : 15) + '<b>Dry</b></span>';
+  if (w.tmax !== null) h += '<span class="wx temp">' + (w.tmin !== null ? w.tmin + '–' : '') + w.tmax + '°</span>';
+  return h;
+}
+// the strip under the greeting
+function wxStrip() {
+  if (!S.wx) return '';
+  var day = MA.wxWhich(), w = MA.wxDay(S.wx, day);
+  if (!w) return '';
+  var tip = w.wet && w.rain >= 50 ? 'Umbrella and rain jackets' : w.sunny ? 'Sun cream on before they go out' : 'No umbrella needed';
+  return '<button class="wxstrip" data-act="pickDay" data-d="' + day + '"><span class="lbl">' + (day === today() ? 'Today' : 'Tomorrow') + '</span><span class="row" style="gap:8px;flex-wrap:wrap">' + wxChips(w, true) + '</span><span class="tip">' + tip + '</span></button>';
+}
+ACT.wxPlace = function () {
+  openSheet('<div class="shead"><h2>Weather for</h2><button class="iconbtn" data-act="closeSheet">' + I.x + '</button></div>' +
+    '<p class="muted" style="margin:0 0 10px">Type your town or area.</p><div class="row"><input class="in grow" id="wxQ" placeholder="Douglas, Carrigaline, Ballincollig…" autocomplete="off" enterkeyhint="search"><button class="btn primary small" data-act="wxFind">Find</button></div><div id="wxRes" style="margin-top:10px"></div>',
+    function (root) { var q = $('#wxQ', root); q.focus(); q.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); ACT.wxFind(); } }); });
+};
+ACT.wxFind = function () {
+  var q = ($('#wxQ') || {}).value || '', box = $('#wxRes');
+  if (!q.trim()) return;
+  box.innerHTML = '<p class="muted">Looking…</p>';
+  fetch('https://geocoding-api.open-meteo.com/v1/search?count=6&countryCode=IE&name=' + encodeURIComponent(q.trim())).then(function (r) { return r.json(); }).then(function (j) {
+    var rs = (j && j.results) || [];
+    box.innerHTML = rs.length ? rs.map(function (r) { var name = r.name + (r.admin2 ? ', ' + r.admin2.replace(/^County /, '') : r.admin1 ? ', ' + r.admin1 : ''); return '<button class="payset" data-act="wxPick" data-name="' + esc(name) + '" data-lat="' + r.latitude + '" data-lon="' + r.longitude + '">' + ic('map', 18) + '<span class="grow"><b>' + esc(name) + '</b></span></button>'; }).join('') : '<p class="muted">Nothing found. Try the nearest town.</p>';
+  }, function () { box.innerHTML = '<p class="muted">No internet just now.</p>'; });
+};
+ACT.wxPick = function (el) {
+  saveSet({ weather: { on: true, place: el.getAttribute('data-name'), lat: +el.getAttribute('data-lat'), lon: +el.getAttribute('data-lon') } }, 'Weather for ' + el.getAttribute('data-name'));
+  closeSheet(); setTimeout(function () { wxLoad(true); }, 300);
+};
+ACT.wxToggle = function () { var on = st().weather.on === false; saveSet({ weather: { on: on } }); setTimeout(function () { wxLoad(true); render(); }, 200); };
+function weatherCard() {
+  var s = st(), on = s.weather.on !== false, w = S.wx && MA.wxDay(S.wx, MA.wxWhich());
+  return '<div class="card"><h3>' + ic('umbrella', 15) + ' Weather</h3>' +
+    '<button class="switch' + (on ? ' on' : '') + '" data-act="wxToggle"><span class="tx">Rain and sun on Home<small>Umbrella with the chance of rain, sun with the UV for sun cream. Today until 4pm, then tomorrow. Also in the 8pm email.</small></span><span class="sw"></span></button>' +
+    (on ? '<div class="row" style="margin-top:4px"><span class="grow"><b>' + esc(s.weather.place) + '</b>' + (w ? '<div class="row" style="gap:6px;margin-top:6px">' + wxChips(w) + '</div>' : '') + '</span><button class="btn small" data-act="wxPlace">Change</button></div>' : '') + '</div>';
+}
+setInterval(function () { if (!document.hidden) wxLoad(false); }, 15 * 60e3);
+document.addEventListener('visibilitychange', function () { if (!document.hidden) wxLoad(false); });
+
+// ============================================================ traffic: live drive times for the school runs, and the road cameras
+ICON.traffic = '<rect x="8" y="2.5" width="8" height="19" rx="3"/><circle cx="12" cy="7" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="17" r="1.6"/>';
+ICON.video = '<rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10.5l5-3v9l-5-3z"/>';
+ICON.camera = '<path d="M4 8h3l2-2.5h6L17 8h3v11H4z"/><circle cx="12" cy="13.2" r="3.4"/>';
+
+// Public cameras. TII: still pictures, refreshed every minute or so. M28 works: live video.
+var CAMS = [
+  { id: 'm28-rochestown-n', group: 'Rochestown and Douglas', name: 'Rochestown North', kind: 'video', src: 'https://media.evercam.io/streaming/hls/m28li-ncusk/index.m3u8', by: 'M28' },
+  { id: 'm28-rochestown-s', group: 'Rochestown and Douglas', name: 'Rochestown South', kind: 'video', src: 'https://media.evercam.io/streaming/hls/m28li-pmseq/index.m3u8', by: 'M28' },
+  { id: 'tii-j9-w', group: 'Rochestown and Douglas', name: 'N40 Bloomfield (J9), west', kind: 'image', src: 'https://irecam.carsprogram.org/IBI/11_N40_J9_W.jpg', by: 'TII' },
+  { id: 'tii-j9-e', group: 'Rochestown and Douglas', name: 'N40 Bloomfield (J9), east', kind: 'image', src: 'https://irecam.carsprogram.org/IBI/12_N40_J9_E.jpg', by: 'TII' },
+  { id: 'm28-maryborough-n', group: 'Rochestown and Douglas', name: 'Maryborough North', kind: 'video', src: 'https://media.evercam.io/streaming/hls/m28li-ghbxv/index.m3u8', by: 'M28' },
+  { id: 'm28-maryborough-s', group: 'Rochestown and Douglas', name: 'Maryborough South', kind: 'video', src: 'https://media.evercam.io/streaming/hls/m28li-qtois/index.m3u8', by: 'M28' },
+  { id: 'm28-carrs-s', group: 'Rochestown and Douglas', name: "Carr's Hill South", kind: 'video', src: 'https://media.evercam.io/streaming/hls/m28li-neasw/index.m3u8', by: 'M28' },
+  { id: 'tii-mahon-before', group: 'Mahon, the tunnel and Dunkettle', name: 'N40 before Mahon (J10)', kind: 'image', src: 'https://irecam.carsprogram.org/Kapsch/time_logo_cctv-15.jpg', by: 'TII' },
+  { id: 'tii-mahon-n', group: 'Mahon, the tunnel and Dunkettle', name: 'N40 after Mahon (J10), north', kind: 'image', src: 'https://irecam.carsprogram.org/IBI/16_N40_J10_N.jpg', by: 'TII' },
+  { id: 'tii-mahon-s', group: 'Mahon, the tunnel and Dunkettle', name: 'N40 after Mahon (J10), south', kind: 'image', src: 'https://irecam.carsprogram.org/IBI/17_N40_J10_S.jpg', by: 'TII' },
+  { id: 'tii-jlt-s', group: 'Mahon, the tunnel and Dunkettle', name: 'Before the Jack Lynch Tunnel', kind: 'image', src: 'https://irecam.carsprogram.org/IBI/18_N40_JLT_S.jpg', by: 'TII' },
+  { id: 'tii-jlt-n', group: 'Mahon, the tunnel and Dunkettle', name: 'After the Jack Lynch Tunnel', kind: 'image', src: 'https://irecam.carsprogram.org/IBI/19_N40_JLT_N.jpg', by: 'TII' },
+  { id: 'tii-jlt-w', group: 'Mahon, the tunnel and Dunkettle', name: 'N40 westbound, after the tunnel', kind: 'image', src: 'https://irecam.carsprogram.org/Kapsch/time_logo_cctv-22A.jpg', by: 'TII' },
+  { id: 'tii-dunkettle-n40', group: 'Mahon, the tunnel and Dunkettle', name: 'Dunkettle, N40', kind: 'image', src: 'https://irecam.carsprogram.org/IBI/20_N40_Dunkettle.jpg', by: 'TII' },
+  { id: 'tii-dunkettle-n25', group: 'Mahon, the tunnel and Dunkettle', name: 'Dunkettle, N25', kind: 'image', src: 'https://irecam.carsprogram.org/IBI/21_N25_Dunkettle.jpg', by: 'TII' },
+  { id: 'tii-dunkettle-n8', group: 'Mahon, the tunnel and Dunkettle', name: 'Dunkettle, N8', kind: 'image', src: 'https://irecam.carsprogram.org/IBI/22_N8_Dunkettle.jpg', by: 'TII' },
+  { id: 'tii-dunkettle-m8', group: 'Mahon, the tunnel and Dunkettle', name: 'Dunkettle, M8', kind: 'image', src: 'https://irecam.carsprogram.org/IBI/23_M8_Dunkettle.jpg', by: 'TII' },
+  { id: 'tii-j7', group: 'South Ring Road west', name: 'N40 at J7', kind: 'image', src: 'https://irecam.carsprogram.org/Kapsch/time_logo_cctv-10.jpg', by: 'TII' },
+  { id: 'tii-j6-e', group: 'South Ring Road west', name: 'N40 Kinsale Road (J6), east', kind: 'image', src: 'https://irecam.carsprogram.org/Kapsch/time_logo_cctv-8.jpg', by: 'TII' },
+  { id: 'tii-j6-w', group: 'South Ring Road west', name: 'N40 Kinsale Road (J6), west', kind: 'image', src: 'https://irecam.carsprogram.org/Kapsch/time_logo_cctv-9.jpg', by: 'TII' },
+  { id: 'tii-j5-e', group: 'South Ring Road west', name: 'N40 at J5, east', kind: 'image', src: 'https://irecam.carsprogram.org/Kapsch/time_logo_cctv-7.jpg', by: 'TII' },
+  { id: 'tii-j4-e', group: 'South Ring Road west', name: 'N40 at J4, east', kind: 'image', src: 'https://irecam.carsprogram.org/Kapsch/time_logo_cctv-4.jpg', by: 'TII' },
+  { id: 'tii-j3-e', group: 'South Ring Road west', name: 'N40 Bandon Road (J3), east', kind: 'image', src: 'https://irecam.carsprogram.org/Kapsch/time_logo_cctv-2.jpg', by: 'TII' },
+  { id: 'tii-j1', group: 'South Ring Road west', name: 'N40 at J1 (N22)', kind: 'image', src: 'https://irecam.carsprogram.org/Kapsch/time_logo_cctv-1.jpg', by: 'TII' },
+  { id: 'm28-shannonpark-n', group: 'M28 towards Carrigaline', name: 'Shannonpark North', kind: 'video', src: 'https://media.evercam.io/streaming/hls/m28li-vqbtg/index.m3u8', by: 'M28' },
+  { id: 'm28-shannonpark-e', group: 'M28 towards Carrigaline', name: 'Shannonpark East', kind: 'video', src: 'https://media.evercam.io/streaming/hls/m28li-injbk/index.m3u8', by: 'M28' },
+  { id: 'm28-shannonpark-w', group: 'M28 towards Carrigaline', name: 'Shannonpark West', kind: 'video', src: 'https://media.evercam.io/streaming/hls/m28li-cusma/index.m3u8', by: 'M28' },
+  { id: 'm28-shanbally-w', group: 'M28 towards Carrigaline', name: 'Shanbally West', kind: 'video', src: 'https://media.evercam.io/streaming/hls/m28li-jekzw/index.m3u8', by: 'M28' },
+  { id: 'm28-shanbally-e', group: 'M28 towards Carrigaline', name: 'Shanbally East', kind: 'video', src: 'https://media.evercam.io/streaming/hls/m28li-khzxy/index.m3u8', by: 'M28' }
+];
+function cam(id) { return CAMS.filter(function (c) { return c.id === id; })[0]; }
+
+// ------------------------------------------------------------ live times
+S.traffic = store.get('ma-traffic', null);
+function runsReady() { var s = st(); return (s.commutes || []).some(function (c) { return c.on !== false; }) && (s.spots || []).some(function (p) { return p.id === 'home' && typeof p.lat === 'number'; }); }
+function trafficLoad(force) {
+  if (!S.conn || S.trafficBusy) return Promise.resolve();
+  if (!force && S.traffic && Date.now() - S.traffic.at < 180e3) return Promise.resolve();
+  S.trafficBusy = true;
+  return api('traffic', {}).then(function (t) {
+    S.trafficBusy = false; S.traffic = t; store.set('ma-traffic', t);
+    if (S.sheetOpen && $('#runsBox')) $('#runsBox').innerHTML = runsHtml(); else if (S.tab === 'home') softRender();
+  }, function () { S.trafficBusy = false; });
+}
+function trafficHours() { var d = new Date(), m = d.getHours() * 60 + d.getMinutes(), wd = d.getDay(); return wd >= 1 && wd <= 5 && m >= 390 && m <= 600; }
+function delayClass(d) { return d >= 8 ? 'bad' : d >= 3 ? 'slow' : 'ok'; }
+function runRow(c, r) {
+  var s = st(), stops = (c.stops || []).map(function (id) { var p = (s.spots || []).filter(function (x) { return x.id === id; })[0]; return p ? p.name : '?'; });
+  var h = '<div class="run"><span class="me" style="background:' + parentColor(c.who) + ';width:34px;height:34px;font-size:13px">' + esc(initial(pName(c.who))) + '</span><span class="grow"><b>' + esc(pName(c.who)) + '</b> <span class="muted">' + esc(stops.join(' → ')) + '</span>';
+  if (!r) h += '<small>Checking…</small>';
+  else if (!r.ready) h += '<small>' + (r.error ? esc(r.error) : 'Needs ' + esc((r.missing || []).join(', ')) + ' in Places') + '</small>';
+  else {
+    var leave = c.leave && (c.days || []).indexOf(new Date().getDay()) >= 0 ? MA.mins(c.leave) : null;
+    h += '<small>' + (r.delay > 0 ? 'Usually ' + r.usual + ' min' : 'Normal traffic') + (r.legs[0] && r.legs[0].via ? ' · via ' + esc(r.legs[r.legs.length - 1].via) : '') + (leave !== null ? ' · leave ' + MA.time12(c.leave) + ', there by ' + MA.time12(MA.fromMins(leave + r.mins)) : '') + '</small>';
+    if (r.legs.length > 1) h += '<small>' + r.legs.map(function (l) { return esc(l.to) + ' ' + l.mins + ' min'; }).join(' · ') + '</small>';
+  }
+  h += '</span>' + (r && r.ready ? '<span class="mins ' + delayClass(r.delay) + '"><b>' + r.mins + '</b> min' + (r.delay >= 3 ? '<i>+' + r.delay + '</i>' : '') + '</span>' : '') + '</div>';
+  return h;
+}
+function runsHtml() {
+  var s = st(), t = S.traffic || { runs: [] };
+  var runs = (s.commutes || []).filter(function (c) { return c.on !== false; });
+  if (!runs.length) return '<p class="muted">No runs set up. Add them in Places.</p>';
+  return runs.map(function (c) { return runRow(c, (t.runs || []).filter(function (r) { return r.id === c.id; })[0]); }).join('') +
+    (S.traffic ? '<p class="muted" style="font-size:12px;margin:6px 0 0">Live from Google Maps, ' + esc(ago(S.traffic.at)) + '.</p>' : '');
+}
+// Home: the runs on weekday mornings; a small link the rest of the time
+function trafficCard() {
+  if (!runsReady()) return '';
+  if (!trafficHours()) return '<button class="trafficlink" data-act="trafficOpen">' + ic('traffic', 17) + '<span>Traffic and cameras</span>' + ic('right', 15) + '</button>';
+  setTimeout(function () { trafficLoad(false); }, 50);
+  return '<div class="card traffic"><h3>' + ic('traffic', 15) + ' Traffic now<span class="r"><a href="#" data-act="trafficOpen">cameras</a></span></h3><div id="runsBoxHome">' + runsHtml() + '</div></div>';
+}
+setInterval(function () { if (!document.hidden && S.conn && runsReady() && (trafficHours() || (S.sheetOpen && $('#runsBox')))) trafficLoad(false); }, 60e3);
+
+// ------------------------------------------------------------ the traffic screen: runs + cameras
+ACT.trafficOpen = function () {
+  S.camAll = false;
+  drawTraffic();
+  if (runsReady()) trafficLoad(true);
+};
+function drawTraffic() {
+  var s = st(), favs = s.cams || [];
+  var list = S.camAll ? CAMS : CAMS.filter(function (c) { return favs.indexOf(c.id) >= 0; });
+  var h = '<div class="shead"><span class="tile big" style="--tc:var(--dad)">' + ic('traffic', 24) + '</span><h2>Traffic</h2><button class="iconbtn" data-act="closeSheet">' + I.x + '</button></div>';
+  h += runsReady() ? '<div id="runsBox">' + runsHtml() + '</div><div class="acts" style="margin-top:8px"><button class="btn small" data-act="trafficRefresh">' + I.repeat + 'Check again</button><button class="btn small" data-act="placesOpen">' + I.map + 'Places and runs</button></div>'
+    : '<div class="card flat" style="margin:6px 0"><b>Live drive times</b><p class="muted" style="margin:6px 0 10px;font-size:14px">Put in your home Eircode once and it shows how long the school runs take right now.</p><button class="btn primary small" data-act="placesOpen">Set up places</button></div>';
+  h += '<button class="trafficlink" style="margin:12px 0 0;width:100%" data-act="busesOpen">' + ic('bus', 17) + '<span>Buses into town</span>' + ic('right', 15) + '</button>';
+  h += '<div class="lday"><span>Cameras</span><span class="r"><a href="#" data-act="camAll">' + (S.camAll ? 'just my ones' : 'all ' + CAMS.length) + '</a></span></div>';
+  var group = '';
+  h += '<div class="camgrid">';
+  list.forEach(function (c) {
+    if (S.camAll && c.group !== group) { group = c.group; h += '<div class="camgroup">' + esc(group) + '</div>'; }
+    var fav = favs.indexOf(c.id) >= 0;
+    h += '<div class="camtile"><button class="camimg" data-act="camOpen" data-id="' + c.id + '">' +
+      (c.kind === 'image' ? '<img loading="lazy" alt="" src="' + esc(c.src) + '?t=' + Math.floor(Date.now() / 60000) + '">' : '<span class="camvid">' + ic('video', 26) + '<small>Live video</small></span>') +
+      '</button><span class="camname">' + esc(c.name) + '</span><button class="camfav' + (fav ? ' on' : '') + '" data-act="camFav" data-id="' + c.id + '" aria-label="' + (fav ? 'Remove from my cameras' : 'Add to my cameras') + '">' + ic('star', 16, fav ? 'star' : '') + '</button></div>';
+  });
+  h += '</div><p class="muted" style="font-size:12px;margin:10px 0 0">Pictures from TII (refreshed about every minute) and live video from the M28 works cameras. They are public cameras; nothing is recorded.</p>';
+  openSheet(h);
+}
+ACT.trafficRefresh = function (el) { el.disabled = true; trafficLoad(true).then(function () { el.disabled = false; }); };
+ACT.camAll = function () { S.camAll = !S.camAll; drawTraffic(); };
+ACT.camFav = function (el) {
+  var id = el.getAttribute('data-id'), favs = (st().cams || []).slice(), i = favs.indexOf(id);
+  if (i >= 0) favs.splice(i, 1); else favs.push(id);
+  queue('saveSettings', { settings: { cams: favs } }, true);
+  S.data.settings.cams = favs; drawTraffic();
+};
+// the picture refreshes while open; the video stops and is let go the moment you leave (a hidden video keeps decoding)
+ACT.camOpen = function (el) {
+  var c = cam(el.getAttribute('data-id')); if (!c) return;
+  var h = '<div class="shead"><button class="iconbtn" data-act="trafficOpen" aria-label="Back">' + I.left + '</button><h2 style="font-size:23px">' + esc(c.name) + '</h2><button class="iconbtn" data-act="closeSheet">' + I.x + '</button></div>' +
+    '<div class="camview">' + (c.kind === 'image' ? '<img id="camBig" alt="' + esc(c.name) + '" src="' + esc(c.src) + '?t=' + Date.now() + '">' : '<video id="camVid" muted playsinline autoplay controls></video>') + '</div>' +
+    '<p class="muted" id="camNote" style="font-size:13px;margin:8px 0 0">' + (c.kind === 'image' ? 'Refreshes every minute while open. ' : 'Live. ') + esc(c.group) + ' · ' + esc(c.by) + '</p>';
+  openSheet(h, function () {
+    if (c.kind === 'image') {
+      var tmr = setInterval(function () { var im = $('#camBig'); if (!im) { clearInterval(tmr); return; } im.src = c.src + '?t=' + Date.now(); }, 60e3);
+      S.sheetCleanup = function () { clearInterval(tmr); };
+    } else playHls($('#camVid'), c.src);
+  });
+};
+var hlsLoading = null;
+function playHls(v, src) {
+  var hls = null, gone = false;
+  S.sheetCleanup = function () { gone = true; try { if (hls) hls.destroy(); } catch (e) { } try { v.pause(); v.removeAttribute('src'); v.load(); } catch (e) { } };
+  function fail() { var n = $('#camNote'); if (n) n.textContent = 'This camera is not showing just now. Try another.'; }
+  v.addEventListener('error', fail);
+  function go() {
+    if (gone) return;
+    if (window.Hls && Hls.isSupported()) { hls = new Hls({ maxBufferLength: 10 }); hls.on(Hls.Events.ERROR, function (e, d) { if (d && d.fatal) fail(); }); hls.loadSource(src); hls.attachMedia(v); v.play().catch(function () { }); }
+    else if (v.canPlayType('application/vnd.apple.mpegurl')) { v.src = src; v.play().catch(function () { }); }
+    else fail();
+  }
+  if (window.Hls || v.canPlayType('application/vnd.apple.mpegurl') && !window.MediaSource) { go(); return; }
+  hlsLoading = hlsLoading || new Promise(function (res) {
+    var sc = document.createElement('script'); sc.src = 'https://cdn.jsdelivr.net/npm/hls.js@1.5.20/dist/hls.min.js';
+    sc.onload = res; sc.onerror = res; document.head.appendChild(sc);
+  });
+  hlsLoading.then(go);
+}
+
+// ------------------------------------------------------------ places and runs
+function placesCard() {
+  var s = st(), home = (s.spots || []).filter(function (p) { return p.id === 'home'; })[0], found = (s.spots || []).filter(function (p) { return typeof p.lat === 'number'; }).length;
+  return '<div class="card"><h3>' + ic('traffic', 15) + ' Places and traffic</h3><p style="margin:0 0 8px;font-size:14.5px">' +
+    (home && typeof home.lat === 'number' ? found + ' places found. Live drive times on weekday mornings, and a ping 20 minutes before you leave if the roads are slow.' : 'Put in your home Eircode and it works out the school runs with live traffic.') + '</p>' +
+    '<div class="acts"><button class="btn small primary" data-act="placesOpen">' + I.map + 'Places and runs</button><button class="btn small" data-act="trafficOpen">' + ic('camera', 17) + 'Cameras</button></div></div>';
+}
+ACT.placesOpen = function () {
+  var s = st();
+  S.pl = { spots: JSON.parse(JSON.stringify(s.spots || [])), commutes: JSON.parse(JSON.stringify(s.commutes || [])), find: null, results: null };
+  drawPlaces();
+};
+function drawPlaces(msg) {
+  var P = S.pl, h = '<div class="shead"><span class="tile big" style="--tc:var(--dad)">' + ic('map', 24) + '</span><h2>Places and runs</h2><button class="iconbtn" data-act="closeSheet">' + I.x + '</button></div>';
+  h += '<p class="muted" style="margin:0 0 8px">Type an Eircode or an address and tap Find. Check the one it finds is right.</p>';
+  P.spots.forEach(function (p, i) {
+    var okLoc = typeof p.lat === 'number';
+    h += '<div class="spot' + (okLoc ? ' found' : '') + '"><div class="row"><input class="in" data-sp="' + i + '" data-k="name" value="' + esc(p.name) + '" style="flex:1;min-height:42px;font-weight:700" aria-label="Name">' +
+      (p.id === 'home' ? '' : '<button class="iconbtn plain" data-act="spotDel" data-i="' + i + '" aria-label="Remove">' + I.bin + '</button>') + '</div>' +
+      '<div class="row" style="margin-top:6px"><input class="in grow" data-sp="' + i + '" data-k="address" value="' + esc(p.address) + '" placeholder="' + (p.id === 'home' ? 'Your Eircode, e.g. T12 AB12' : 'Eircode or address') + '" autocapitalize="characters" style="min-height:42px"><button class="btn small" data-act="spotFind" data-i="' + i + '">Find</button></div>' +
+      (P.find === i && P.results ? '<div class="sugbox">' + (P.results.length ? P.results.map(function (r, j) { return '<button data-act="spotPick" data-i="' + i + '" data-j="' + j + '">' + ic('map', 16) + '<span class="grow">' + esc(r.address) + '</span></button>'; }).join('') : '<p class="muted" style="padding:10px 14px;margin:0">Nothing found. Try the Eircode.</p>') + '</div>' : '') +
+      '<small class="' + (okLoc ? 'okc' : 'muted') + '">' + (okLoc ? ic('check', 13) + ' Found' : 'Not found yet') + '</small></div>';
+  });
+  h += '<button class="btn small" data-act="spotAdd" style="margin-top:6px">' + I.plus + 'Add a place</button>';
+  h += '<div class="lday"><span>Weekday runs</span></div>';
+  P.commutes.forEach(function (c, i) {
+    h += '<div class="spot"><div class="row" style="gap:8px"><span class="me" style="background:' + parentColor(c.who) + ';width:30px;height:30px;font-size:12px">' + esc(initial(pName(c.who))) + '</span><b class="grow">' + esc(pName(c.who)) + '</b>' +
+      '<button class="switch' + (c.on !== false ? ' on' : '') + '" style="width:auto;padding:0" data-act="runOn" data-i="' + i + '"><span class="sw"></span></button></div>' +
+      '<div class="muted" style="font-size:12.5px;margin:10px 0 6px">Route (tap in order)</div><div class="chips">' + P.spots.map(function (p) { var k = c.stops.indexOf(p.id); return '<button class="chip' + (k >= 0 ? ' on' : '') + '" style="--c:' + parentColor(c.who) + '" data-act="runStop" data-i="' + i + '" data-id="' + esc(p.id) + '">' + (k >= 0 ? (k + 1) + '. ' : '') + esc(p.name) + '</button>'; }).join('') + '</div>' +
+      '<div class="two" style="margin-top:10px"><div><div class="muted" style="font-size:12.5px;margin-bottom:6px">Usually leaves</div><input class="in" type="time" data-run="' + i + '" value="' + esc(c.leave || '') + '"></div>' +
+      '<div><div class="muted" style="font-size:12.5px;margin-bottom:6px">Days</div><div class="days" style="grid-template-columns:repeat(7,1fr);gap:3px">' + [1, 2, 3, 4, 5, 6, 0].map(function (d) { return '<button class="chip' + ((c.days || []).indexOf(d) >= 0 ? ' on' : '') + '" style="min-height:36px;padding:0;font-size:12px;justify-content:center" data-act="runDay" data-i="' + i + '" data-d="' + d + '">' + MA.WD[d].charAt(0) + '</button>'; }).join('') + '</div></div></div></div>';
+  });
+  h += '<p class="err" style="color:var(--warn);font-weight:600;min-height:18px;margin:8px 0 0">' + esc(msg || '') + '</p>';
+  h += '<div class="sfoot"><button class="btn" data-act="closeSheet">Cancel</button><button class="btn primary grow" data-act="placesSave">' + I.check + 'Save</button></div>';
+  var keep = $('#sheet .panel') && S.sheetOpen ? $('#sheet .panel').scrollTop : 0;
+  openSheet(h, function (root) {
+    $$('[data-sp]', root).forEach(function (inp) { inp.addEventListener('input', function () { S.pl.spots[+inp.getAttribute('data-sp')][inp.getAttribute('data-k')] = inp.value; if (inp.getAttribute('data-k') === 'address') { var sp = S.pl.spots[+inp.getAttribute('data-sp')]; sp.lat = null; sp.lon = null; } }); });
+    $$('[data-run]', root).forEach(function (inp) { inp.addEventListener('input', function () { S.pl.commutes[+inp.getAttribute('data-run')].leave = inp.value; }); });
+  });
+  if (keep) $('#sheet .panel').scrollTop = keep;
+}
+Object.assign(ACT, {
+  spotFind: function (el) {
+    var i = +el.getAttribute('data-i'), p = S.pl.spots[i];
+    if (!String(p.address || '').trim()) { drawPlaces('Type the Eircode or address for ' + p.name + ' first.'); return; }
+    el.disabled = true; el.textContent = '…';
+    api('geocode', { q: p.address }).then(function (r) { S.pl.find = i; S.pl.results = r.results; drawPlaces(); }, function (e) { drawPlaces(e.message); });
+  },
+  spotPick: function (el) {
+    var p = S.pl.spots[+el.getAttribute('data-i')], r = S.pl.results[+el.getAttribute('data-j')];
+    p.address = r.address; p.lat = r.lat; p.lon = r.lon; S.pl.find = null; S.pl.results = null; drawPlaces();
+  },
+  spotAdd: function () { S.pl.spots.push({ id: MA.uid('s'), name: 'New place', address: '', lat: null, lon: null }); drawPlaces(); setTimeout(function () { var ins = $$('[data-k=name]'); if (ins.length) { ins[ins.length - 1].focus(); ins[ins.length - 1].select(); } }, 60); },
+  spotDel: function (el) { var p = S.pl.spots.splice(+el.getAttribute('data-i'), 1)[0]; S.pl.commutes.forEach(function (c) { c.stops = c.stops.filter(function (x) { return x !== p.id; }); }); drawPlaces(); },
+  runOn: function (el) { var c = S.pl.commutes[+el.getAttribute('data-i')]; c.on = c.on === false; drawPlaces(); },
+  runDay: function (el) { var c = S.pl.commutes[+el.getAttribute('data-i')], d = +el.getAttribute('data-d'), k = (c.days || []).indexOf(d); c.days = c.days || []; if (k >= 0) c.days.splice(k, 1); else c.days.push(d); drawPlaces(); },
+  runStop: function (el) { var c = S.pl.commutes[+el.getAttribute('data-i')], id = el.getAttribute('data-id'), k = c.stops.indexOf(id); if (k >= 0) c.stops.splice(k, 1); else c.stops.push(id); drawPlaces(); },
+  placesSave: function (el) {
+    var P = S.pl;
+    if (P.commutes.some(function (c) { return c.on !== false && c.stops.length < 2; })) { drawPlaces('Each run needs at least two places, in order.'); return; }
+    el.disabled = true; el.innerHTML = 'Saving…';
+    flush().then(function () { return api('saveSpots', { spots: P.spots, commutes: P.commutes }); }).then(function (r) {
+      S.data.settings = r.settings; saveCache(); S.traffic = null; store.set('ma-traffic', null);
+      closeSheet(); toast('Saved. Drive times worked out from home.'); render(); if (runsReady()) trafficLoad(true);
+    }, function (e) { drawPlaces(e.message); });
+  }
+});
+
+// ============================================================ buses into town (Bus Éireann timetable, cut down by tools/make-buses.js)
+ICON.bus = ICON.bus || '<rect x="4" y="3" width="16" height="15" rx="3"/><path d="M4 11h16M8 18v3M16 18v3"/><circle cx="8" cy="14.5" r="1"/><circle cx="16" cy="14.5" r="1"/>';
+var BUSES_URL = 'buses.json';
+S.buses = null;
+function busesLoad() {
+  if (S.buses || S.busesLoading) return S.busesLoading || Promise.resolve(S.buses);
+  S.busesLoading = fetch(BUSES_URL).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) { S.buses = j; S.busesLoading = null; return j; }, function () { S.busesLoading = null; return null; });
+  return S.busesLoading;
+}
+function ymdKey(d) { return d.replace(/-/g, ''); }
+// does this service run on this date? (weekday pattern within its dates, plus one-off additions and removals)
+function svcRuns(sv, day) {
+  var k = ymdKey(day);
+  if (sv.off.indexOf(k) >= 0) return false;
+  if (sv.add.indexOf(k) >= 0) return true;
+  return k >= sv.from && k <= sv.to && sv.days[MA.weekday(day)] === 1;
+}
+// the buses into town from a stop on a day, from a time on
+function busesAt(stop, day, fromMins) {
+  var B = S.buses, out = [];
+  Object.keys(stop.d).forEach(function (sid) {
+    var sv = B.services[sid];
+    if (!sv || !svcRuns(sv, day)) return;
+    stop.d[sid].split(' ').forEach(function (x) {
+      var p = x.split('.'), hh = +p[0].slice(0, 2), mm = +p[0].slice(2), m = hh * 60 + mm; // GTFS times can run past 24:00
+      if (m >= (fromMins || 0)) out.push({ m: m, t: MA.pad(hh % 24) + ':' + MA.pad(mm), route: B.routes[+p[1]], head: B.heads[+p[2]] });
+    });
+  });
+  out.sort(function (a, b) { return a.m - b.m; });
+  return out.filter(function (b, i) { return !i || b.m !== out[i - 1].m || b.route !== out[i - 1].route; });
+}
+function nextBuses(stop, n) {
+  var now = new Date(), t = today(), nm = now.getHours() * 60 + now.getMinutes();
+  // after midnight, last night's late buses still count (the timetable files them under the day before, as 24:xx+)
+  var late = busesAt(stop, MA.addDays(t, -1), 1440 + nm).map(function (b) { b.day = t; b.in = b.m - 1440 - nm; return b; });
+  var list = late.concat(busesAt(stop, t, nm).map(function (b) { b.day = t; b.in = b.m - nm; return b; }));
+  if (list.length < n) busesAt(stop, MA.addDays(t, 1), 0).slice(0, n - list.length).forEach(function (b) { b.day = MA.addDays(t, 1); b.in = null; list.push(b); });
+  return list.slice(0, n);
+}
+function myStops() {
+  var ids = (st().buses && st().buses.stops) || [];
+  return S.buses ? ids.map(function (id) { return S.buses.stops.filter(function (s) { return s.id === id; })[0]; }).filter(Boolean) : [];
+}
+function busRow(b) {
+  var when = b.in === null ? 'tomorrow ' + MA.time12(b.t) : b.in <= 0 ? 'now' : b.in < 60 ? 'in ' + b.in + ' min' : MA.time12(b.t);
+  return '<div class="bus"><span class="rt">' + esc(b.route) + '</span><span class="grow"><b>' + esc(MA.time12(b.t)) + '</b><small>' + (/south mall|patrick|merchants|parnell|grand parade|city/i.test(b.head) ? 'to ' + esc(b.head) : 'through town, on to ' + esc(b.head)) + '</small></span><span class="when' + (b.in !== null && b.in <= 10 ? ' soon' : '') + '">' + esc(when) + '</span></div>';
+}
+function stopBlock(s, n) {
+  var nx = nextBuses(s, n || 3);
+  return '<div class="busstop"><div class="bsn">' + ic('bus', 16) + '<b>' + esc(stopName(s)) + '</b><span class="muted">stop ' + esc(s.code) + '</span></div>' +
+    (nx.length ? nx.map(busRow).join('') : '<p class="muted" style="margin:4px 0">No more buses into town today.</p>') + '</div>';
+}
+// the timetable updates itself every Monday on GitHub; if that ever stops, say so rather than show old times quietly
+function busesStale() {
+  var m = S.buses && S.buses.made; if (!m) return '';
+  var age = MA.diffDays(m, today());
+  return age > 45 ? '<p style="font-size:12.5px;color:var(--warn);font-weight:600;margin:6px 0 0">This timetable is ' + age + ' days old. On GitHub, open Actions and run Update bus timetable.</p>' : '';
+}
+function stopName(s) { var names = (st().buses && st().buses.names) || {}; return names[s.id] || s.name; }
+function weekend() { var d = new Date().getDay(); return d === 0 || d === 6; }
+// Home: at the weekend, the next buses into town from your stops
+function busCard() {
+  var want = (st().buses && st().buses.stops) || [];
+  if (!want.length || !weekend()) return '';
+  var h = new Date().getHours();
+  if (h < 6) return '';
+  if (!S.buses) { busesLoad().then(function (j) { if (j && S.tab === 'home') softRender(); }); return ''; }
+  var stops = myStops();
+  if (!stops.length) return '';
+  return '<div class="card buses"><h3>' + ic('bus', 15) + ' Buses into town<span class="r"><a href="#" data-act="busesOpen">all today</a></span></h3>' + stops.map(function (s) { return stopBlock(s, 3); }).join('') +
+    '<p class="muted" style="font-size:11.5px;margin:6px 0 0">Bus Éireann timetable. Buses can run a few minutes early or late.</p>' + busesStale() + '</div>';
+}
+// the full list for today (or tomorrow), and choosing stops
+ACT.busesOpen = function () { S.busDay = today(); busesLoad().then(drawBuses); };
+function drawBuses() {
+  if (!S.buses) { openSheet('<div class="shead"><h2>Buses</h2><button class="iconbtn" data-act="closeSheet">' + I.x + '</button></div><p class="muted">The bus timetable could not be loaded. Check the internet and try again.</p>'); return; }
+  var t = today(), d = S.busDay || t, nm = d === t ? new Date().getHours() * 60 + new Date().getMinutes() : 0, stops = myStops();
+  var h = '<div class="shead"><span class="tile big" style="--tc:var(--dad)">' + ic('bus', 24) + '</span><h2>Buses into town</h2><button class="iconbtn" data-act="closeSheet">' + I.x + '</button></div>' +
+    '<div class="seg" style="margin:6px 0 10px">' + [[t, 'Today'], [MA.addDays(t, 1), 'Tomorrow']].map(function (x) { return '<button class="' + (d === x[0] ? 'on' : '') + '" data-act="busDay" data-d="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</div>';
+  if (!stops.length) h += '<p class="muted">No stops chosen yet.</p>';
+  stops.forEach(function (s) {
+    var all = busesAt(s, d, nm);
+    h += '<div class="busstop"><div class="bsn">' + ic('bus', 16) + '<b>' + esc(stopName(s)) + '</b><span class="muted">stop ' + esc(s.code) + ' · ' + esc(s.routes.join(', ')) + '</span></div>' +
+      (all.length ? '<div class="busgrid">' + all.map(function (b) { return '<span><b>' + esc(MA.time12(b.t)) + '</b> ' + esc(b.route) + '</span>'; }).join('') + '</div>' : '<p class="muted" style="margin:4px 0">No more buses into town ' + (d === t ? 'today' : 'that day') + '.</p>') + '</div>';
+  });
+  h += '<button class="btn small" style="margin-top:10px" data-act="busStops">' + I.map + 'Choose stops</button>';
+  h += '<p class="muted" style="font-size:11.5px;margin:10px 0 0">Bus Éireann timetable, cut down to Douglas, Grange, Maryborough, Rochestown and Moneygourney. Only buses that go on into the city centre are shown.' + (S.buses.made ? ' Updated ' + esc(S.buses.made) + '.' : '') + '</p>';
+  openSheet(h);
+}
+ACT.busDay = function (el) { S.busDay = el.getAttribute('data-d'); drawBuses(); };
+ACT.busStops = function () {
+  busesLoad().then(function () {
+    if (!S.buses) return;
+    S.bsQ = ''; drawBusStops();
+  });
+};
+function drawBusStops() {
+  var s = st(), chosen = (s.buses && s.buses.stops) || [], home = (s.spots || []).filter(function (p) { return p.id === 'home' && typeof p.lat === 'number'; })[0];
+  var list = S.buses.stops.map(function (b) { var o = { s: b, dist: home ? Math.round(Math.sqrt(Math.pow((b.lat - home.lat) * 111320, 2) + Math.pow((b.lon - home.lon) * 69000, 2))) : null }; return o; });
+  var q = (S.bsQ || '').toLowerCase();
+  if (q) list = list.filter(function (x) { return (x.s.name + ' ' + x.s.code + ' ' + x.s.routes.join(' ')).toLowerCase().indexOf(q) >= 0; });
+  list.sort(function (a, b) { var ca = chosen.indexOf(a.s.id) >= 0 ? 0 : 1, cb = chosen.indexOf(b.s.id) >= 0 ? 0 : 1; return ca - cb || (a.dist !== null ? a.dist - b.dist : a.s.name.localeCompare(b.s.name)); });
+  var h = '<div class="shead"><button class="iconbtn" data-act="busesOpen" aria-label="Back">' + I.left + '</button><h2 style="font-size:24px">Choose stops</h2><button class="iconbtn" data-act="closeSheet">' + I.x + '</button></div>' +
+    '<p class="muted" style="margin:0 0 8px">Tick the stops you use. Only ones with buses into town are listed' + (home ? ', nearest home first' : '') + '. The stop number is on the pole.</p>' +
+    '<input class="in" id="bsQ" placeholder="Search: Moneygurney, Douglas, 220…" value="' + esc(S.bsQ || '') + '" autocomplete="off">';
+  h += list.slice(0, 40).map(function (x) {
+    var on = chosen.indexOf(x.s.id) >= 0;
+    return '<div class="row"><button class="tick pick' + (on ? ' done' : '') + '" data-act="busPick" data-id="' + esc(x.s.id) + '"><span class="bx">' + I.check + '</span><span class="tx">' + esc(x.s.name) + '<small>stop ' + esc(x.s.code) + ' · ' + esc(x.s.routes.join(', ')) + (x.dist !== null ? ' · ' + (x.dist < 1000 ? x.dist + ' m' : (x.dist / 1000).toFixed(1) + ' km') + ' from home' : '') + '</small></span></button></div>';
+  }).join('');
+  openSheet(h, function (root) {
+    var inp = $('#bsQ', root);
+    inp.addEventListener('input', function () { S.bsQ = inp.value; var pos = inp.selectionStart; drawBusStops(); var n = $('#bsQ'); n.focus(); try { n.setSelectionRange(pos, pos); } catch (e) { } });
+  });
+}
+ACT.busPick = function (el) {
+  var id = el.getAttribute('data-id'), b = MA.merge({ stops: [] }, st().buses || {}), i = b.stops.indexOf(id);
+  b.stops = b.stops.slice(); if (i >= 0) b.stops.splice(i, 1); else b.stops.push(id);
+  S.data.settings.buses = b;
+  queue('saveSettings', { settings: { buses: b } }, true);
+  el.classList.toggle('done', i < 0);
+};
+function busesCard() {
+  var n = ((st().buses && st().buses.stops) || []).length;
+  return '<div class="card"><h3>' + ic('bus', 15) + ' Buses into town</h3><p style="margin:0 0 8px;font-size:14.5px">' + (n ? n + (n === 1 ? ' stop' : ' stops') + ' chosen. At the weekend, Home shows the next buses into town from them.' : 'Pick the stops you use. At the weekend, Home shows the next buses into town.') + '</p>' +
+    '<div class="acts"><button class="btn small primary" data-act="busStops">' + I.map + 'Choose stops</button>' + (n ? '<button class="btn small" data-act="busesOpen">' + ic('bus', 17) + 'Today\'s buses</button>' : '') + '</div></div>';
 }
 
 start();
