@@ -414,7 +414,28 @@ body.welcome-on #app { padding-bottom: 0; }
 /* ------------------------------------------------ traffic and cameras */
 .trafficlink { display: flex; align-items: center; gap: 8px; margin: -2px 16px 10px; width: calc(100% - 32px); padding: 9px 14px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); font-weight: 600; font-size: 14.5px; color: var(--dad); }
 .trafficlink span { flex: 1; text-align: left; }
-.card.traffic { border-color: color-mix(in srgb, var(--dad) 35%, var(--line)); }
+.kv + .drivebox { margin: 8px 0 4px 38px; }
+.next .driveout .run, .drivebox .run { border-bottom: 0; padding-bottom: 2px; }
+.next .driveout .run small, .next .driveout .run .mins { color: #D8CFBF; }
+.next .driveout .run .mins.ok b { color: #8FC7A4; }
+.next .guess { background: rgba(255, 255, 255, .08); color: #EFE7D8; }
+.next .guess a { color: var(--brass-lt); }
+.next .guess .okc { color: #8FC7A4; }
+.guess { background: var(--card2); border-radius: 12px; padding: 8px 12px; margin-top: 6px; font-size: 13.5px; }
+.guess p { margin: 0 0 8px; }
+.guess .okc { margin: 0; color: var(--ok); font-weight: 600; }
+.brief { margin: -2px 16px 10px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+.brow { display: flex; align-items: center; gap: 11px; width: 100%; padding: 10px 12px 10px 11px; text-align: left; }
+.brow + .brow { border-top: 1px solid var(--line); }
+.brow .tile { width: 34px; height: 34px; border-radius: 11px; }
+.brow .bt { flex: 1; min-width: 0; }
+.brow .bt b { display: block; font-size: 15px; font-weight: 700; line-height: 1.3; }
+.brow .bt small { display: block; font-size: 12.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+.brow i { font-style: normal; font-weight: 800; }
+.brow i.slow { color: #B7791F; }
+.brow i.bad { color: var(--warn); }
+.brow > .ic:last-child { color: var(--muted); flex: none; }
+.trafficlink small { display: block; font-weight: 500; font-size: 12.5px; color: var(--muted); margin-top: 1px; }
 .run { display: flex; gap: 10px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--line); }
 .run:last-of-type { border-bottom: 0; }
 .run small { display: block; color: var(--muted); font-size: 12.5px; }
@@ -442,7 +463,6 @@ body.welcome-on #app { padding-bottom: 0; }
 .spot .okc .ic { vertical-align: -2px; }
 
 /* ------------------------------------------------ buses */
-.card.buses { border-color: color-mix(in srgb, var(--dad) 30%, var(--line)); }
 .busstop { padding: 8px 0 4px; border-bottom: 1px solid var(--line); }
 .busstop:last-of-type { border-bottom: 0; }
 .bsn { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; flex-wrap: wrap; }
@@ -547,9 +567,10 @@ var MA = (function () {
     // places with real addresses, and the weekday runs (live traffic). Home needs its Eircode typed in once.
     spots: [
       { id: 'home', name: 'Home', address: '', lat: null, lon: null },
-      { id: 'gaelscoil', name: 'Gaelscoil Dhúglais', address: 'Gaelscoil Dhúglais, Douglas, Cork', lat: null, lon: null },
-      { id: 'finbarrs', name: "St Finbarr's", address: "St Finbarr's Hospital, Douglas Road, Cork", lat: null, lon: null },
-      { id: 'iosagain', name: 'Scoil Íosagáin', address: 'Scoil Íosagáin, Knockpogue Avenue, Farranree, Cork', lat: null, lon: null }
+      // found already (checked on OpenStreetMap and by Eircode), so only Home needs typing in
+      { id: 'gaelscoil', name: 'Gaelscoil na Dúglaise', also: 'School', address: 'Gaelscoil na Dúglaise, South Douglas Road, Cork', lat: 51.87732, lon: -8.44382 },
+      { id: 'finbarrs', name: "St Finbarr's", address: "St Finbarr's Hospital, Douglas Road, Cork, T12 XH60", lat: 51.88765, lon: -8.46119 },
+      { id: 'iosagain', name: 'Scoil Íosagáin', address: 'Scoil Íosagáin, Knockpogue Avenue, Farranree, Cork, T23 EW70', lat: 51.91075, lon: -8.48502 }
     ],
     commutes: [
       { id: 'dave-am', who: 'dad', name: 'School and work', stops: ['home', 'gaelscoil', 'finbarrs'], days: [1, 2, 3, 4, 5], leave: '08:15', on: true },
@@ -713,8 +734,27 @@ var MA = (function () {
 
   function leaveBy(o, st) {
     var t = mins(o.start); if (t === null || !o.place) return null;
-    var m = st && st.places && st.places[o.place];
+    var m = placeMins(st, o.place);
     return m ? fromMins(t - m) : null;
+  }
+  // An activity's "where" is typed freely ("School", "School (upstairs)", "Páirc Uí Chaoimh"). It links to a saved
+  // place by its name or one of its other names, ignoring capitals, fadas and anything in brackets.
+  function placeKey(p) {
+    return String(p || '').toLowerCase().replace(/\(.*?\)/g, ' ').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
+  }
+  function spotFor(st, place) {
+    var k = placeKey(place); if (!k || !st) return null;
+    return (st.spots || []).filter(function (s) {
+      return [s.name].concat(String(s.also || '').split(',')).some(function (n) { return placeKey(n) === k; });
+    })[0] || null;
+  }
+  // the usual drive from home: typed in on the form, or worked out for the saved place it links to
+  function placeMins(st, place) {
+    if (!st || !place) return 0;
+    var pl = st.places || {}, s;
+    if (pl[place]) return pl[place];
+    s = spotFor(st, place);
+    return (s && pl[s.name]) || 0;
   }
 
   // ---------------------------------------------------------------- money: Lisa, Trish, party balances…
@@ -948,7 +988,7 @@ var MA = (function () {
       if (o.place) L.push('LOCATION:' + esc(o.place));
       var det = details(o, st); if (det) L.push('DESCRIPTION:' + esc(det));
       if (o.start) {
-        var before = (+o.alarmMins || 30) + ((st && st.places && st.places[o.place]) || 0);
+        var before = (+o.alarmMins || 30) + placeMins(st, o.place);
         L.push('BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + esc(o.title), 'TRIGGER:-PT' + before + 'M', 'END:VALARM');
         if (o.important) L.push('BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + esc(o.title), 'TRIGGER:-P1D', 'END:VALARM');
       }
@@ -964,7 +1004,7 @@ var MA = (function () {
     var out = [];
     occ.forEach(function (o) {
       if (!o.start) return;
-      var travel = (st && st.places && st.places[o.place]) || 0;
+      var travel = placeMins(st, o.place);
       if (o.drop) out.push({ who: o.drop, at: mins(o.start), leave: mins(o.start) - travel, o: o, what: 'drop' });
       if (o.pick) out.push({ who: o.pick, at: mins(endOf(o)), leave: mins(endOf(o)) - travel, o: o, what: 'collect' });
     });
@@ -979,7 +1019,7 @@ var MA = (function () {
       if (j[b].leave >= j[a].at + 5) continue;
       // collecting a child and driving the same child on to the next thing is one trip
       // (only when the drive time is known, so we can tell it's doable)
-      if (j[a].what === 'collect' && j[b].what === 'drop' && j[a].o.kid === j[b].o.kid && st && st.places && st.places[j[b].o.place] && j[b].leave >= j[a].at) continue;
+      if (j[a].what === 'collect' && j[b].what === 'drop' && j[a].o.kid === j[b].o.kid && placeMins(st, j[b].o.place) && j[b].leave >= j[a].at) continue;
       var pair = [j[a].o.key, j[b].o.key].sort().join('~');
       if (seen[pair]) continue;
       seen[pair] = 1;
@@ -1029,7 +1069,7 @@ var MA = (function () {
     DAY: DAY, WD: WD, WDL: WDL, MON: MON, MONL: MONL, CATS: CATS, DEFAULTS: DEFAULTS,
     pad: pad, addDays: addDays, diffDays: diffDays, weekday: weekday, ymd: ymd, hm: hm, mins: mins, fromMins: fromMins, isYmd: isYmd, monday: monday, merge: merge, uid: uid,
     time12: time12, dayWords: dayWords, shortDate: shortDate, longDate: longDate, kidName: kidName, parentName: parentName, describeRepeat: describeRepeat,
-    rawDates: rawDates, occurrences: occurrences, range: range, timeline: timeline, partOf: partOf, byTime: byTime, forKid: forKid, itemsOn: itemsOn, isDone: isDone, leaveBy: leaveBy,
+    rawDates: rawDates, occurrences: occurrences, range: range, timeline: timeline, partOf: partOf, byTime: byTime, forKid: forKid, itemsOn: itemsOn, isDone: isDone, leaveBy: leaveBy, placeKey: placeKey, spotFor: spotFor, placeMins: placeMins,
     awayOn: awayOn, needsCover: needsCover, jobs: jobs, clashes: clashes, noDriver: noDriver, week: week, minsLevel: minsLevel, runsLevel: runsLevel,
     wxUrl: wxUrl, parseWx: parseWx, wxAt: wxAt, wxDay: wxDay, wxWords: wxWords, wxWhich: wxWhich, wxWindow: wxWindow, isOutdoor: isOutdoor,
     euro: euro, payee: payee, isPayment: isPayment, headsDays: headsDays, moneyDue: moneyDue, moneySay: moneySay,
@@ -1315,8 +1355,7 @@ function viewHome() {
   MA.range(S.data, t, t).forEach(function (o) { counts.all++; if (MA.forKid(o, 'max')) counts.max++; if (MA.forKid(o, 'ari')) counts.ari++; });
   h += '<h1 class="hello">' + greet() + ', ' + esc(s.parents[S.me].name) + '</h1><p class="sub">' + esc(MA.longDate(t)) + '</p>';
   h += wxStrip();
-  h += trafficCard();
-  h += busCard();
+  h += travelBrief();
   h += stories(counts);
   var news = lastByOther();
   if (news.length) h += '<button class="news" data-act="feed"><span class="dot"></span><span class="grow">' + esc(news[0].by) + ' ' + esc(news[0].what.toLowerCase()) + ': ' + esc(news[0].detail) + (news.length > 1 ? ' <span class="muted">+' + (news.length - 1) + ' more</span>' : '') + '</span>' + ic('right', 18) + '</button>';
@@ -1384,7 +1423,9 @@ function nextUp() {
   else if (o.drop || o.pick) h += '<div class="leave">' + ic('car', 17) + [o.drop ? esc(pName(o.drop)) + ' drops' : '', o.pick ? esc(pName(o.pick)) + ' collects' : ''].filter(String).join(' · ') + '</div>';
   if (o.notes) h += '<div class="nnote">' + esc(o.notes) + '</div>';
   if (o.bring && o.bring.length) h += '<div class="packs">' + packTicks(o) + '</div>';
-  h += '<div class="acts">' + (o.place ? '<a class="btn small" href="' + mapsUrl(o.place) + '" target="_blank" rel="noopener">' + I.map + 'Directions</a>' : '') + '<button class="btn small" data-act="openOcc" data-key="' + esc(o.key) + '" data-d="' + o.date + '">Details</button></div></div>';
+  h += '<div class="acts">' + (o.place ? '<a class="btn small" href="' + mapsUrl(o.place) + '" target="_blank" rel="noopener">' + I.map + 'Directions</a><button class="btn small" data-act="driveLive">' + ic('car', 17) + 'Live time</button>' : '') + '<button class="btn small" data-act="openOcc" data-key="' + esc(o.key) + '" data-d="' + o.date + '">Details</button></div>' +
+    (o.place ? '<div class="driveout">' + driveOut(o.place, o.start, o.date) + '</div>' : '') + '</div>';
+  if (o.place) h = h.replace('<div class="next">', '<div class="next" data-drive="' + esc(o.place) + '" data-start="' + esc(o.start || '') + '" data-day="' + o.date + '">');
   return h;
 }
 function mapsUrl(place) { return 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(place); }
@@ -1470,7 +1511,7 @@ function showOcc(key, day) {
     '<div class="row wrap" style="margin:6px 0 8px">' + kidPills(o.kid) + '<span class="pill soft" style="--c:' + c.color + '">' + esc(c.label) + '</span></div>' +
     kv('cal', esc(MA.longDate(o.date)), (o.start ? MA.time12(o.start) + (o.end ? ' – ' + MA.time12(o.end) : '') : 'All day') + (o.changed ? ' · changed from the usual' : '')) +
     (o.series ? kv('repeat', esc(MA.describeRepeat(ev.repeat)), ev.start && o.changed ? 'Usually ' + MA.time12(ev.start) : '') : '') +
-    (o.place ? kv('map', esc(o.place), s.places[o.place] ? s.places[o.place] + ' min drive' + (lb ? ' · leave by ' + MA.time12(lb) : '') : '', '<a class="btn small" href="' + mapsUrl(o.place) + '" target="_blank" rel="noopener">Go</a>') : '') +
+    (o.place ? kv('map', esc(o.place), MA.placeMins(s, o.place) ? MA.placeMins(s, o.place) + ' min drive' + (lb ? ' · leave by ' + MA.time12(lb) : '') : '', '<a class="btn small" href="' + mapsUrl(o.place) + '" target="_blank" rel="noopener">Go</a>') + driveBox(o.place, o.start, o.date) : '') +
     (MA.isPayment(o) ? kv('coin', esc(MA.euro(o.money.amount)) + (o.money.method === 'transfer' ? ' by transfer' : ' in cash') + ' to ' + esc(MA.payee(o)), 'Heads-up ' + MA.headsDays(o, s) + (MA.headsDays(o, s) === 1 ? ' day' : ' days') + ' before' + (o.money.by ? ' · ' + esc(pName(o.money.by)) + ' pays' : '') + (o.paid ? ' · paid by ' + esc(pName(o.paid.by)) : ''),
       '<button class="tick' + (o.paid ? ' done' : '') + '" style="width:auto;border:0;min-height:0" data-act="paidTick" data-ev="' + esc(o.ev) + '" data-d="' + o.orig + '"><span class="bx">' + I.check + '</span><span class="tx" style="font-size:14px">Paid</span></button>') : '') +
     '<label class="f">Drop off</label>' + driverChips('drop', o.drop) +
@@ -1683,7 +1724,8 @@ function chip(label, on, act, data, color) {
 function drawForm() {
   var f = S.form.f, s = st(), body = $('#formBody'); if (!body) return;
   var places = {}; S.data.events.forEach(function (e) { if (e.place) places[e.place] = 1; }); Object.keys(s.places).forEach(function (p) { places[p] = 1; });
-  var travel = S.form.placeTravel !== null ? S.form.placeTravel : (s.places[f.place] || 0);
+  (s.spots || []).forEach(function (p) { if (p.id !== 'home') places[p.name] = 1; });
+  var travel = S.form.placeTravel !== null ? S.form.placeTravel : MA.placeMins(s, f.place);
   var bringSug = {}; (BRING[f.cat] || []).forEach(function (b) { bringSug[b] = 1; });
   remembered(f.title).slice(0, 3).forEach(function (e) { (e.bring || []).forEach(function (b) { bringSug[b] = 1; }); });
   var h = '<label class="f" for="fTitle">What</label><input class="in big" id="fTitle" data-f="title" value="' + esc(f.title) + '" placeholder="Swimming, piano, dentist…" autocomplete="off"><div id="sugs"></div>';
@@ -2816,12 +2858,32 @@ function runsHtml() {
   return runs.map(function (c) { return runRow(c, (t.runs || []).filter(function (r) { return r.id === c.id; })[0]); }).join('') +
     (S.traffic ? '<p class="muted" style="font-size:12px;margin:6px 0 0">Live from Google Maps, ' + esc(ago(S.traffic.at)) + '.</p>' : '');
 }
-// Home: the runs on weekday mornings; a small link the rest of the time
-function trafficCard() {
-  if (!runsReady()) return '';
-  if (!trafficHours()) return '<button class="trafficlink" data-act="trafficOpen">' + ic('traffic', 17) + '<span>Traffic and cameras</span>' + ic('right', 15) + '</button>';
+// Home: one small box. A line or two each for traffic and, at the weekend, the next bus; tap a row for the full screen.
+function travelBrief() {
+  var bus = busBrief();
+  return '<div class="brief">' + bus + trafficBrief() + '</div>';
+}
+function briefRow(act, icon, color, line1, line2) {
+  return '<button class="brow" data-act="' + act + '"><span class="tile" style="--tc:' + color + '">' + ic(icon, 18) + '</span><span class="bt"><b>' + line1 + '</b>' + (line2 ? '<small>' + line2 + '</small>' : '') + '</span>' + ic('right', 16) + '</button>';
+}
+var DELAY_COLOR = { ok: 'var(--ok)', slow: '#B7791F', bad: 'var(--warn)' };
+function trafficBrief() {
+  var link = function (sub) { return briefRow('trafficOpen', 'traffic', 'var(--dad)', 'Traffic and cameras', sub); };
+  if (!runsReady()) return link('Add your home Eircode for live drive times');
+  var wd = new Date().getDay(), runs = (st().commutes || []).filter(function (c) { return c.on !== false && (c.days || []).indexOf(wd) >= 0; });
+  if (!trafficHours() || !runs.length) return link('Live times from where you are, and road cameras');
   setTimeout(function () { trafficLoad(false); }, 50);
-  return '<div class="card traffic"><h3>' + ic('traffic', 15) + ' Traffic now<span class="r"><a href="#" data-act="trafficOpen">cameras</a></span></h3><div id="runsBoxHome">' + runsHtml() + '</div></div>';
+  var got = (S.traffic && S.traffic.runs) || [];
+  var rs = runs.map(function (c) { return { c: c, r: got.filter(function (r) { return r.id === c.id; })[0] }; });
+  var ready = rs.filter(function (x) { return x.r && x.r.ready; });
+  if (!ready.length) {
+    var bad = rs.filter(function (x) { return x.r; })[0];
+    return briefRow('trafficOpen', 'traffic', 'var(--dad)', 'Traffic now', bad ? esc(bad.r.error || 'Needs ' + (bad.r.missing || []).join(', ') + ' in Places') : 'Checking the school runs…');
+  }
+  var line1 = ready.map(function (x) { var d = x.r.delay; return esc(pName(x.c.who)) + ' ' + x.r.mins + ' min' + (d >= 3 ? ' <i class="' + delayClass(d) + '">+' + d + '</i>' : ''); }).join(' · ');
+  var worst = ready.slice().sort(function (a, b) { return b.r.delay - a.r.delay; })[0], w = worst.r, via = w.legs.length && w.legs[w.legs.length - 1].via;
+  var line2 = w.delay >= 3 ? esc(pName(worst.c.who)) + ': ' + w.delay + ' min slower than usual' + (via ? ', via ' + esc(via) : '') : 'Roads normal · ' + esc(ago(S.traffic.at));
+  return briefRow('trafficOpen', 'traffic', DELAY_COLOR[delayClass(w.delay)], line1, line2);
 }
 setInterval(function () { if (!document.hidden && S.conn && runsReady() && (trafficHours() || (S.sheetOpen && $('#runsBox')))) trafficLoad(false); }, 60e3);
 
@@ -2837,6 +2899,9 @@ function drawTraffic() {
   var h = '<div class="shead"><span class="tile big" style="--tc:var(--dad)">' + ic('traffic', 24) + '</span><h2>Traffic</h2><button class="iconbtn" data-act="closeSheet">' + I.x + '</button></div>';
   h += runsReady() ? '<div id="runsBox">' + runsHtml() + '</div><div class="acts" style="margin-top:8px"><button class="btn small" data-act="trafficRefresh">' + I.repeat + 'Check again</button><button class="btn small" data-act="placesOpen">' + I.map + 'Places and runs</button></div>'
     : '<div class="card flat" style="margin:6px 0"><b>Live drive times</b><p class="muted" style="margin:6px 0 10px;font-size:14px">Put in your home Eircode once and it shows how long the school runs take right now.</p><button class="btn primary small" data-act="placesOpen">Set up places</button></div>';
+  var dests = (s.spots || []).filter(function (p) { return typeof p.lat === 'number'; });
+  if (dests.length) h += '<div class="lday"><span>From where you are</span></div><div class="drivebox" data-drive=""><div class="chips">' + dests.map(function (p) { return '<button class="chip' + (S.drive && S.drive.place === p.name ? ' on' : '') + '" data-act="driveChip" data-place="' + esc(p.name) + '">' + esc(p.name) + '</button>'; }).join('') + '</div><div class="driveout">' + (S.drive && dests.some(function (p) { return p.name === S.drive.place; }) ? driveOut(S.drive.place) : '') + '</div>' +
+    '<p class="muted" style="font-size:12px;margin:6px 0 0">Live with traffic from Google Maps. Every activity with a place has a Live time button too.</p></div>';
   h += '<button class="trafficlink" style="margin:12px 0 0;width:100%" data-act="busesOpen">' + ic('bus', 17) + '<span>Buses into town</span>' + ic('right', 15) + '</button>';
   h += '<div class="lday"><span>Cameras</span><span class="r"><a href="#" data-act="camAll">' + (S.camAll ? 'just my ones' : 'all ' + CAMS.length) + '</a></span></div>';
   var group = '';
@@ -2911,9 +2976,10 @@ function drawPlaces(msg) {
     var okLoc = typeof p.lat === 'number';
     h += '<div class="spot' + (okLoc ? ' found' : '') + '"><div class="row"><input class="in" data-sp="' + i + '" data-k="name" value="' + esc(p.name) + '" style="flex:1;min-height:42px;font-weight:700" aria-label="Name">' +
       (p.id === 'home' ? '' : '<button class="iconbtn plain" data-act="spotDel" data-i="' + i + '" aria-label="Remove">' + I.bin + '</button>') + '</div>' +
+      (p.id === 'home' ? '' : '<input class="in" data-sp="' + i + '" data-k="also" value="' + esc(p.also || '') + '" placeholder="Also called, e.g. School" aria-label="Also called" style="min-height:38px;margin-top:6px;font-size:14px">') +
       '<div class="row" style="margin-top:6px"><input class="in grow" data-sp="' + i + '" data-k="address" value="' + esc(p.address) + '" placeholder="' + (p.id === 'home' ? 'Your Eircode, e.g. T12 AB12' : 'Eircode or address') + '" autocapitalize="characters" style="min-height:42px"><button class="btn small" data-act="spotFind" data-i="' + i + '">Find</button></div>' +
       (P.find === i && P.results ? '<div class="sugbox">' + (P.results.length ? P.results.map(function (r, j) { return '<button data-act="spotPick" data-i="' + i + '" data-j="' + j + '">' + ic('map', 16) + '<span class="grow">' + esc(r.address) + '</span></button>'; }).join('') : '<p class="muted" style="padding:10px 14px;margin:0">Nothing found. Try the Eircode.</p>') + '</div>' : '') +
-      '<small class="' + (okLoc ? 'okc' : 'muted') + '">' + (okLoc ? ic('check', 13) + ' Found' : 'Not found yet') + '</small></div>';
+      '<small class="' + (okLoc ? 'okc' : 'muted') + '">' + (okLoc ? ic('check', 13) + ' Found · <a href="https://www.google.com/maps?q=' + p.lat + ',' + p.lon + '" target="_blank" rel="noopener">check on the map</a>' : 'Not found yet') + '</small></div>';
   });
   h += '<button class="btn small" data-act="spotAdd" style="margin-top:6px">' + I.plus + 'Add a place</button>';
   h += '<div class="lday"><span>Weekday runs</span></div>';
@@ -2960,6 +3026,72 @@ Object.assign(ACT, {
   }
 });
 
+// ------------------------------------------------------------ live time from where you are, to any activity's place
+// A button with data-act="driveLive" inside anything carrying data-drive="<place>" (and data-start/data-day for "leave by").
+function driveBox(place, start, day, label) {
+  return '<div class="drivebox" data-drive="' + esc(place) + '" data-start="' + esc(start || '') + '" data-day="' + esc(day || '') + '"><button class="btn small" data-act="driveLive">' + ic('car', 17) + (label || 'Live time from here') + '</button><div class="driveout">' + driveOut(place, start, day) + '</div></div>';
+}
+// the last answer stays on screen for 4 minutes, through Home's own refreshes
+function driveOut(place, start, day) { var D = S.drive; return D && D.place === place && Date.now() - D.at < 240e3 ? driveHtml(D.r, place, start, day) : ''; }
+function whereAmI() {
+  return new Promise(function (res, rej) {
+    if (!navigator.geolocation) { rej(new Error('This phone will not share its location with the app.')); return; }
+    navigator.geolocation.getCurrentPosition(function (p) { res({ lat: p.coords.latitude, lon: p.coords.longitude }); },
+      function (e) { rej(new Error(e.code === 1 ? 'Location is off for this app.' : 'Could not tell where you are just now.')); },
+      { enableHighAccuracy: false, timeout: 12000, maximumAge: 120000 });
+  });
+}
+function homeFound() { return (st().spots || []).some(function (p) { return p.id === 'home' && typeof p.lat === 'number'; }); }
+ACT.driveLive = function (el) {
+  var box = el.closest('[data-drive]'), place = box.getAttribute('data-drive'), start = box.getAttribute('data-start') || '', day = box.getAttribute('data-day') || '', out = $('.driveout', box);
+  if (!place) return;
+  el.disabled = true; out.innerHTML = '<p class="muted" style="margin:8px 0 0">Finding where you are…</p>';
+  whereAmI().then(function (loc) { return { loc: loc }; }, function (e) { return { err: e.message }; }).then(function (w) {
+    if (w.err && !homeFound()) throw new Error(w.err + ' Allow location for this app, or put the home Eircode in Places.');
+    out.innerHTML = '<p class="muted" style="margin:8px 0 0">Asking Google Maps…</p>';
+    return api('driveTo', { to: place, from: w.loc || null }).then(function (r) { if (w.err) r.note = w.err + ' Timed from home instead.'; return r; });
+  }).then(function (r) {
+    el.disabled = false; S.drive = { r: r, place: place, at: Date.now() };
+    if (out.isConnected) out.innerHTML = driveHtml(r, place, start, day);
+  }, function (e) { el.disabled = false; out.innerHTML = '<p style="color:var(--warn);font-weight:600;font-size:13.5px;margin:8px 0 0">' + esc(e.message) + '</p>'; });
+};
+ACT.driveChip = function (el) {
+  var box = el.closest('[data-drive]');
+  $$('.chip', box).forEach(function (c) { c.classList.toggle('on', c === el); });
+  box.setAttribute('data-drive', el.getAttribute('data-place'));
+  ACT.driveLive(el);
+};
+function driveHtml(r, place, start, day) {
+  var d = r.mins - r.usual, nm = nowMins(), h = '<div class="run drive"><span class="grow"><b>' + (r.fromHere ? 'From where you are' : 'From home') + ' to ' + esc(r.place || place) + '</b>' +
+    '<small>' + (d >= 3 ? 'Usually ' + r.usual + ' min' : 'Normal traffic') + ' · ' + r.km + ' km' + (r.via ? ' · via ' + esc(r.via) : '') + '</small>';
+  if (start && day === today() && MA.mins(start) > nm) { var lb = MA.mins(start) - r.mins; h += '<small>' + (lb <= nm ? 'Leave now to make ' + MA.time12(start) : 'Leave by ' + MA.time12(MA.fromMins(lb)) + ' for ' + MA.time12(start)) + '</small>'; }
+  else h += '<small>Leaving now, there about ' + MA.time12(MA.fromMins(nm + r.mins)) + '</small>';
+  if (r.note) h += '<small>' + esc(r.note) + '</small>';
+  h += '</span><span class="mins ' + delayClass(d) + '"><b>' + r.mins + '</b> min' + (d >= 3 ? '<i>+' + d + '</i>' : '') + '</span></div>';
+  if (!r.saved) h += '<div class="guess"><p>Google took “' + esc(r.place || place) + '” to be <b>' + esc(r.address || 'somewhere it could not name') + '</b>' + (typeof r.lat === 'number' ? ' · <a href="https://www.google.com/maps?q=' + r.lat + ',' + r.lon + '" target="_blank" rel="noopener">check on the map</a>' : '') + '</p>' +
+    '<div class="acts"><button class="btn small primary" data-act="driveKeep">' + I.check + 'That’s right, save it</button><button class="btn small" data-act="driveFix">Not right</button></div></div>';
+  return h;
+}
+// right: keep it as a place, so from now on it links without Google guessing
+ACT.driveKeep = function (el) {
+  var D = S.drive; if (!D || typeof D.r.lat !== 'number') return;
+  var name = D.r.place || D.place, spots = (st().spots || []).concat([{ id: MA.uid('s'), name: name, address: D.r.address || name, lat: D.r.lat, lon: D.r.lon }]);
+  el.disabled = true;
+  flush().then(function () { return api('saveSpots', { spots: spots }); }).then(function (res) {
+    S.data.settings = res.settings; saveCache(); D.r.saved = true;
+    var g = el.closest('.guess'); if (g) g.innerHTML = '<p class="okc">' + ic('check', 13) + ' Saved to Places. ' + esc(name) + ' is found straight away from now on.</p>';
+  }, function (e) { el.disabled = false; toast(e.message); });
+};
+// wrong: open Places with it added, ready for its Eircode (or it can go under "Also called" on a place already there)
+ACT.driveFix = function () {
+  var D = S.drive; if (!D) return;
+  var name = D.r.place || D.place;
+  ACT.placesOpen();
+  S.pl.spots.push({ id: MA.uid('s'), name: name, also: '', address: '', lat: null, lon: null });
+  drawPlaces('Type the Eircode for ' + name + ' and tap Find, then Save. Or delete it and put ' + name + ' under “Also called” on a place you have.');
+  setTimeout(function () { var ins = $$('[data-k=address]'); if (ins.length) { ins[ins.length - 1].scrollIntoView({ block: 'center' }); ins[ins.length - 1].focus(); } }, 80);
+};
+
 // ============================================================ buses into town (Bus Éireann timetable, cut down by tools/make-buses.js)
 ICON.bus = ICON.bus || '<rect x="4" y="3" width="16" height="15" rx="3"/><path d="M4 11h16M8 18v3M16 18v3"/><circle cx="8" cy="14.5" r="1"/><circle cx="16" cy="14.5" r="1"/>';
 var BUSES_URL = 'buses.json';
@@ -2994,7 +3126,7 @@ function busesAt(stop, day, fromMins) {
 function nextBuses(stop, n) {
   var now = new Date(), t = today(), nm = now.getHours() * 60 + now.getMinutes();
   // after midnight, last night's late buses still count (the timetable files them under the day before, as 24:xx+)
-  var late = busesAt(stop, MA.addDays(t, -1), 1440 + nm).map(function (b) { b.day = t; b.in = b.m - 1440 - nm; return b; });
+  var late = busesAt(stop, MA.addDays(t, -1), 1440 + nm).map(function (b) { b.day = t; b.in = b.m - 1440 - nm; b.late = true; return b; });
   var list = late.concat(busesAt(stop, t, nm).map(function (b) { b.day = t; b.in = b.m - nm; return b; }));
   if (list.length < n) busesAt(stop, MA.addDays(t, 1), 0).slice(0, n - list.length).forEach(function (b) { b.day = MA.addDays(t, 1); b.in = null; list.push(b); });
   return list.slice(0, n);
@@ -3007,11 +3139,6 @@ function busRow(b) {
   var when = b.in === null ? 'tomorrow ' + MA.time12(b.t) : b.in <= 0 ? 'now' : b.in < 60 ? 'in ' + b.in + ' min' : MA.time12(b.t);
   return '<div class="bus"><span class="rt">' + esc(b.route) + '</span><span class="grow"><b>' + esc(MA.time12(b.t)) + '</b><small>' + (/south mall|patrick|merchants|parnell|grand parade|city/i.test(b.head) ? 'to ' + esc(b.head) : 'through town, on to ' + esc(b.head)) + '</small></span><span class="when' + (b.in !== null && b.in <= 10 ? ' soon' : '') + '">' + esc(when) + '</span></div>';
 }
-function stopBlock(s, n) {
-  var nx = nextBuses(s, n || 3);
-  return '<div class="busstop"><div class="bsn">' + ic('bus', 16) + '<b>' + esc(stopName(s)) + '</b><span class="muted">stop ' + esc(s.code) + '</span></div>' +
-    (nx.length ? nx.map(busRow).join('') : '<p class="muted" style="margin:4px 0">No more buses into town today.</p>') + '</div>';
-}
 // the timetable updates itself every Monday on GitHub; if that ever stops, say so rather than show old times quietly
 function busesStale() {
   var m = S.buses && S.buses.made; if (!m) return '';
@@ -3020,17 +3147,27 @@ function busesStale() {
 }
 function stopName(s) { var names = (st().buses && st().buses.names) || {}; return names[s.id] || s.name; }
 function weekend() { var d = new Date().getDay(); return d === 0 || d === 6; }
-// Home: at the weekend, the next buses into town from your stops
-function busCard() {
+// Home, at the weekend: the next bus into town from any of your stops, in a line or two (tap for the full list)
+function busBrief() {
   var want = (st().buses && st().buses.stops) || [];
-  if (!want.length || !weekend()) return '';
-  var h = new Date().getHours();
-  if (h < 6) return '';
+  if (!want.length || !weekend() || new Date().getHours() < 6) return '';
   if (!S.buses) { busesLoad().then(function (j) { if (j && S.tab === 'home') softRender(); }); return ''; }
-  var stops = myStops();
+  var stops = myStops(), list = [];
+  stops.forEach(function (s) { nextBuses(s, 3).forEach(function (b) { b.stop = s; list.push(b); }); });
   if (!stops.length) return '';
-  return '<div class="card buses"><h3>' + ic('bus', 15) + ' Buses into town<span class="r"><a href="#" data-act="busesOpen">all today</a></span></h3>' + stops.map(function (s) { return stopBlock(s, 3); }).join('') +
-    '<p class="muted" style="font-size:11.5px;margin:6px 0 0">Bus Éireann timetable. Buses can run a few minutes early or late.</p>' + busesStale() + '</div>';
+  var key = function (b) { return b.in === null ? 1e6 + b.m : b.in; };
+  list.sort(function (a, b) { return key(a) - key(b); });
+  var f = list[0], many = stops.length > 1, at = function (b) { return (many && b.stop !== f.stop ? ' at ' + esc(stopName(b.stop)) : ''); };
+  var age = S.buses.made ? MA.diffDays(S.buses.made, today()) : 0, line1, line2;
+  if (!f) { line1 = 'No buses into town'; line2 = 'Tap to see the timetable'; }
+  else if (f.in === null) { line1 = 'No more buses into town today'; line2 = 'First tomorrow ' + esc(MA.time12(f.t)) + ' (' + esc(f.route) + ') from ' + esc(stopName(f.stop)); }
+  else {
+    line1 = 'Bus ' + esc(f.route) + ' ' + (f.in <= 0 ? 'due now' : f.in < 60 ? 'in ' + f.in + ' min' : 'at ' + esc(MA.time12(f.t)));
+    var then = list.slice(1).filter(function (b) { return b.in !== null; }).slice(0, 2).map(function (b) { return esc(MA.time12(b.t)) + (b.route !== f.route ? ' (' + esc(b.route) + ')' : '') + at(b); });
+    line2 = 'from ' + esc(stopName(f.stop)) + (then.length ? ' · then ' + then.join(', ') : '');
+  }
+  if (age > 45) line2 = 'Timetable ' + age + ' days old · tap to see';
+  return briefRow('busesOpen', 'bus', f && f.in !== null && f.in <= 15 ? 'var(--ok)' : 'var(--dad)', line1, line2);
 }
 // the full list for today (or tomorrow), and choosing stops
 ACT.busesOpen = function () { S.busDay = today(); busesLoad().then(drawBuses); };
@@ -3040,13 +3177,17 @@ function drawBuses() {
   var h = '<div class="shead"><span class="tile big" style="--tc:var(--dad)">' + ic('bus', 24) + '</span><h2>Buses into town</h2><button class="iconbtn" data-act="closeSheet">' + I.x + '</button></div>' +
     '<div class="seg" style="margin:6px 0 10px">' + [[t, 'Today'], [MA.addDays(t, 1), 'Tomorrow']].map(function (x) { return '<button class="' + (d === x[0] ? 'on' : '') + '" data-act="busDay" data-d="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</div>';
   if (!stops.length) h += '<p class="muted">No stops chosen yet.</p>';
+  // today: the next three with "in 8 min", then the rest of the day as a grid
   stops.forEach(function (s) {
-    var all = busesAt(s, d, nm);
+    var all = busesAt(s, d, nm), soon = d === t ? nextBuses(s, 3).filter(function (b) { return b.in !== null; }) : [];
+    var rest = all.slice(soon.filter(function (b) { return !b.late; }).length);
     h += '<div class="busstop"><div class="bsn">' + ic('bus', 16) + '<b>' + esc(stopName(s)) + '</b><span class="muted">stop ' + esc(s.code) + ' · ' + esc(s.routes.join(', ')) + '</span></div>' +
-      (all.length ? '<div class="busgrid">' + all.map(function (b) { return '<span><b>' + esc(MA.time12(b.t)) + '</b> ' + esc(b.route) + '</span>'; }).join('') + '</div>' : '<p class="muted" style="margin:4px 0">No more buses into town ' + (d === t ? 'today' : 'that day') + '.</p>') + '</div>';
+      soon.map(busRow).join('') +
+      (rest.length ? (soon.length ? '<div class="muted" style="font-size:12.5px;font-weight:600;margin:8px 0 4px">Later today</div>' : '') + '<div class="busgrid">' + rest.map(function (b) { return '<span><b>' + esc(MA.time12(b.t)) + '</b> ' + esc(b.route) + '</span>'; }).join('') + '</div>'
+        : soon.length ? '' : '<p class="muted" style="margin:4px 0">No more buses into town ' + (d === t ? 'today' : 'that day') + '.</p>') + '</div>';
   });
   h += '<button class="btn small" style="margin-top:10px" data-act="busStops">' + I.map + 'Choose stops</button>';
-  h += '<p class="muted" style="font-size:11.5px;margin:10px 0 0">Bus Éireann timetable, cut down to Douglas, Grange, Maryborough, Rochestown and Moneygourney. Only buses that go on into the city centre are shown.' + (S.buses.made ? ' Updated ' + esc(S.buses.made) + '.' : '') + '</p>';
+  h += '<p class="muted" style="font-size:11.5px;margin:10px 0 0">Bus Éireann timetable, cut down to Douglas, Grange, Maryborough, Rochestown and Moneygourney. Only buses that go on into the city centre are shown. Buses can run a few minutes early or late.' + (S.buses.made ? ' Updated ' + esc(S.buses.made) + '.' : '') + '</p>' + busesStale();
   openSheet(h);
 }
 ACT.busDay = function (el) { S.busDay = el.getAttribute('data-d'); drawBuses(); };
