@@ -1,0 +1,38 @@
+# Every Monday morning GitHub fetches the latest Bus Éireann timetable (Transport for Ireland open data),
+# cuts it down to the Douglas area and updates the app's buses.json, so the app never goes out of date.
+# Run it by hand any time: GitHub > Actions > Update bus timetable > Run workflow.
+# PUBLISH_APP.bat puts this at the top of the website repo (.github/workflows) and fills in APP, the app's folder.
+name: Update bus timetable
+on:
+  schedule:
+    - cron: '17 4 * * 1'
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+env:
+  APP: MA
+jobs:
+  buses:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Download the Bus Éireann timetable
+        run: |
+          curl -sSL --retry 3 -A "Mozilla/5.0" -o "$RUNNER_TEMP/be.zip" https://www.transportforireland.ie/transitData/Data/GTFS_Bus_Eireann.zip
+          unzip -q -o "$RUNNER_TEMP/be.zip" -d "$RUNNER_TEMP/gtfs"
+      - name: Cut it down to the Douglas area
+        run: node "$APP/tools/make-buses.js" "$RUNNER_TEMP/gtfs" --out "$APP/buses.json"
+      - name: Save it
+        run: |
+          git config user.name "Max and Ari timetable"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$APP/buses.json"
+          if git diff --cached --quiet; then echo "Timetable unchanged"; exit 0; fi
+          git commit -m "Bus timetable $(date +%F)"
+          git push
+          # a push made by this job may not start a website rebuild by itself, so ask for one
+          curl -s -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/${{ github.repository }}/pages/builds" || true

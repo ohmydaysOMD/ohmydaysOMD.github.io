@@ -1,6 +1,6 @@
 // Network first for the page and its config, so a new version reaches every phone the next time it
 // opens; the cache is only for when there is no signal. Apps Script calls are never cached.
-var CACHE = 'max-ari-87885aa7';
+var CACHE = 'max-ari-755525ea';
 var SHELL = ['./', './index.html', './config.js', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(SHELL); }));

@@ -2964,6 +2964,13 @@ function placesCard() {
     (home && typeof home.lat === 'number' ? found + ' places found. Live drive times on weekday mornings, and a ping 20 minutes before you leave if the roads are slow.' : 'Put in your home Eircode and it works out the school runs with live traffic.') + '</p>' +
     '<div class="acts"><button class="btn small primary" data-act="placesOpen">' + I.map + 'Places and runs</button><button class="btn small" data-act="trafficOpen">' + ic('camera', 17) + 'Cameras</button></div></div>';
 }
+// Save looked some places up itself: say where Google put them, so a wrong one is caught
+function showFound(f) {
+  openSheet('<div class="shead"><span class="tile big" style="--tc:var(--ok)">' + ic('check', 24) + '</span><h2>Saved</h2><button class="iconbtn" data-act="closeSheet">' + I.x + '</button></div>' +
+    '<p class="muted" style="margin:0 0 8px">Found from what was typed. Check each one is in the right spot.</p>' +
+    f.map(function (x) { return '<div class="spot found"><b>' + esc(x.name) + '</b><small class="okc">' + esc(x.address) + ' · <a href="https://www.google.com/maps?q=' + x.lat + ',' + x.lon + '" target="_blank" rel="noopener">check on the map</a></small></div>'; }).join('') +
+    '<div class="sfoot"><button class="btn" data-act="placesOpen">' + I.map + 'Change a place</button><button class="btn primary grow" data-act="closeSheet">' + I.check + 'All right</button></div>');
+}
 ACT.placesOpen = function () {
   var s = st();
   S.pl = { spots: JSON.parse(JSON.stringify(s.spots || [])), commutes: JSON.parse(JSON.stringify(s.commutes || [])), find: null, results: null };
@@ -2979,7 +2986,7 @@ function drawPlaces(msg) {
       (p.id === 'home' ? '' : '<input class="in" data-sp="' + i + '" data-k="also" value="' + esc(p.also || '') + '" placeholder="Also called, e.g. School" aria-label="Also called" style="min-height:38px;margin-top:6px;font-size:14px">') +
       '<div class="row" style="margin-top:6px"><input class="in grow" data-sp="' + i + '" data-k="address" value="' + esc(p.address) + '" placeholder="' + (p.id === 'home' ? 'Your Eircode, e.g. T12 AB12' : 'Eircode or address') + '" autocapitalize="characters" style="min-height:42px"><button class="btn small" data-act="spotFind" data-i="' + i + '">Find</button></div>' +
       (P.find === i && P.results ? '<div class="sugbox">' + (P.results.length ? P.results.map(function (r, j) { return '<button data-act="spotPick" data-i="' + i + '" data-j="' + j + '">' + ic('map', 16) + '<span class="grow">' + esc(r.address) + '</span></button>'; }).join('') : '<p class="muted" style="padding:10px 14px;margin:0">Nothing found. Try the Eircode.</p>') + '</div>' : '') +
-      '<small class="' + (okLoc ? 'okc' : 'muted') + '">' + (okLoc ? ic('check', 13) + ' Found · <a href="https://www.google.com/maps?q=' + p.lat + ',' + p.lon + '" target="_blank" rel="noopener">check on the map</a>' : 'Not found yet') + '</small></div>';
+      '<small class="' + (okLoc ? 'okc' : 'muted') + '">' + (okLoc ? ic('check', 13) + ' Found · <a href="https://www.google.com/maps?q=' + p.lat + ',' + p.lon + '" target="_blank" rel="noopener">check on the map</a>' : String(p.address || '').trim() ? 'Not found yet. Tap Find, or just Save and it is looked up' : 'Not found yet') + '</small></div>';
   });
   h += '<button class="btn small" data-act="spotAdd" style="margin-top:6px">' + I.plus + 'Add a place</button>';
   h += '<div class="lday"><span>Weekday runs</span></div>';
@@ -3021,7 +3028,10 @@ Object.assign(ACT, {
     el.disabled = true; el.innerHTML = 'Saving…';
     flush().then(function () { return api('saveSpots', { spots: P.spots, commutes: P.commutes }); }).then(function (r) {
       S.data.settings = r.settings; saveCache(); S.traffic = null; store.set('ma-traffic', null);
-      closeSheet(); toast('Saved. Drive times worked out from home.'); render(); if (runsReady()) trafficLoad(true);
+      var f = r.found || [];
+      // swap the sheet straight over (closing first would let its "back" step close the new one too)
+      if (f.length) { S.pl = null; showFound(f); } else { closeSheet(); toast('Saved. Drive times worked out from home.'); }
+      render(); if (runsReady()) trafficLoad(true);
     }, function (e) { drawPlaces(e.message); });
   }
 });
