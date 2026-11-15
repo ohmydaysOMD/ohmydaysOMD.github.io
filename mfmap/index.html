@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0a1322">
+<title>Map</title>
+<style id="lockcss">
+html,body{margin:0;height:100%;background:radial-gradient(120% 90% at 50% 40%,#16284a,#060b17);color:#fff;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+#lock{position:fixed;inset:0;display:grid;place-items:center;padding:20px}
+#lock form{width:min(340px,100%);text-align:center}
+#lock .mark{width:64px;height:64px;border-radius:50%;margin:0 auto 18px;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#f3d488,#c8952f);box-shadow:0 4px 18px rgba(0,0,0,.45)}
+#lock h1{font:600 26px/1.1 Georgia,"Times New Roman",serif;margin:0 0 6px}
+#lock p{margin:0 0 18px;color:#aebbd4;font-size:14.5px;min-height:1.3em}
+#lock input{width:100%;box-sizing:border-box;padding:14px 16px;border-radius:14px;border:1.5px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff;font-size:17px;text-align:center;outline:none}
+#lock input:focus{border-color:#e0b356}
+#lock button{width:100%;margin-top:10px;padding:14px;border:0;border-radius:14px;background:#e0b356;color:#2b1f05;font-weight:650;font-size:16px;cursor:pointer}
+#lock button:disabled{opacity:.6}
+#lock .bad{color:#ff9d8f}
+</style>
+</head>
+<body>
+<div id="lock"><form id="lf" autocomplete="off">
+  <div class="mark"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#3a2a08" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg></div>
+  <h1>Private map</h1>
+  <p id="lm">Type the code to open it.</p>
+  <input id="lc" type="text" inputmode="text" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="Code" aria-label="Code">
+  <button id="lb">Open</button>
+</form></div>
+<script>
+(function(){
+  var KEY='mfmap.code', $=function(i){return document.getElementById(i)};
+  var norm=function(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'')};
+  var say=function(t,bad){var m=$('lm');m.textContent=t;m.className=bad?'bad':''};
+  var script=function(src){return new Promise(function(res,rej){var s=document.createElement('script');s.src=src;s.onload=res;s.onerror=function(){rej(new Error('load'))};document.head.appendChild(s)})};
+  var sealed=null;
+  async function unlock(code,quiet){
+    code=norm(code); if(!code) return false;
+    if(!window.crypto||!crypto.subtle||!window.DecompressionStream){say('This browser is too old to open the map. Try Chrome or Safari, up to date.',true);return false}
+    $('lb').disabled=true; if(!quiet) say('Opening...');
+    try{
+      if(!sealed) sealed=new Uint8Array(await (await fetch('app.bin?v=mwhp458r')).arrayBuffer());
+      var base=await crypto.subtle.importKey('raw',new TextEncoder().encode(code),'PBKDF2',false,['deriveKey']);
+      var key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:sealed.slice(0,16),iterations:600000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+      var zipped;
+      try{ zipped=await crypto.subtle.decrypt({name:'AES-GCM',iv:sealed.slice(16,28)},key,sealed.slice(28)); }
+      catch(e){ try{localStorage.removeItem(KEY)}catch(x){} say(quiet?'Type the code to open it.':'That code is not right. Try again.',!quiet); $('lb').disabled=false; return false; }
+      var app=JSON.parse(await new Response(new Blob([zipped]).stream().pipeThrough(new DecompressionStream('gzip'))).text());
+      try{localStorage.setItem(KEY,code)}catch(x){}
+      say('Loading the map...');
+      await script('data/world.js?v=mwhp458r'); await script('data/relief.js?v=mwhp458r');
+      document.title=app.title; $('lockcss').remove();
+      var st=document.createElement('style'); st.textContent=app.css; document.head.appendChild(st);
+      document.body.innerHTML=app.body;
+      var s=document.createElement('script'); s.textContent=app.js; document.body.appendChild(s);
+      return true;
+    }catch(e){ say('Could not load the map. Check the internet and try again.',true); $('lb').disabled=false; return false; }
+  }
+  $('lf').addEventListener('submit',function(e){e.preventDefault();unlock($('lc').value)});
+  var m=/[#&]k=([^&]+)/.exec(location.hash), saved=null; try{saved=localStorage.getItem(KEY)}catch(x){}
+  if(m){ try{history.replaceState(null,'',location.pathname+location.search)}catch(x){} unlock(decodeURIComponent(m[1])); }
+  else if(saved) unlock(saved,true);
+  else $('lc').focus();
+})();
+</script>
+</body>
+</html>
