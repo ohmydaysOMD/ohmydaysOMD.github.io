@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#0a1322">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
@@ -41,24 +42,40 @@ html,body{margin:0;height:100%;background:radial-gradient(120% 90% at 50% 40%,#1
   window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.mapInstall=e;window.dispatchEvent(new Event('mapinstall'))});
   window.addEventListener('appinstalled',function(){window.mapInstall=null;window.dispatchEvent(new Event('mapinstall'))});
   if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(){});
-  var KEY='mfmap.code', $=function(i){return document.getElementById(i)};
+  var KC='mfmap.code', KL='mfmap.link', $=function(i){return document.getElementById(i)};
   var norm=function(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'')};
   var say=function(t,bad){var m=$('lm');m.textContent=t;m.className=bad?'bad':''};
   var script=function(src){return new Promise(function(res,rej){var s=document.createElement('script');s.src=src;s.onload=res;s.onerror=function(){rej(new Error('load'))};document.head.appendChild(s)})};
+  var unb64=function(s){s=s.replace(/-/g,'+').replace(/_/g,'/');var b=atob(s),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a};
+  var open=function(key,box){return crypto.subtle.decrypt({name:'AES-GCM',iv:box.slice(0,12)},key,box.slice(12))};
   var sealed=null;
-  async function unlock(code,quiet){
-    code=norm(code); if(!code) return false;
+  // kind 'code': what a person types.  kind 'link': the long key carried by the private link.
+  async function unlock(secret,kind,quiet){
+    if(kind==='code') secret=norm(secret); if(!secret) return false;
     if(!window.crypto||!crypto.subtle||!window.DecompressionStream){say('This browser is too old to open the map. Try Chrome or Safari, up to date.',true);return false}
     $('lb').disabled=true; if(!quiet) say('Opening...');
     try{
-      if(!sealed) sealed=new Uint8Array(await (await fetch('app.bin?v=mwhp99ct')).arrayBuffer());
-      var base=await crypto.subtle.importKey('raw',new TextEncoder().encode(code),'PBKDF2',false,['deriveKey']);
-      var key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:sealed.slice(0,16),iterations:600000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
-      var zipped;
-      try{ zipped=await crypto.subtle.decrypt({name:'AES-GCM',iv:sealed.slice(16,28)},key,sealed.slice(28)); }
-      catch(e){ try{localStorage.removeItem(KEY)}catch(x){} say(quiet?'Type the code to open it.':'That code is not right. Try again.',!quiet); $('lb').disabled=false; return false; }
+      if(!sealed) sealed=new Uint8Array(await (await fetch('app.bin?v=mwhqa9gs')).arrayBuffer());
+      var ck;
+      try{
+        var kek;
+        if(kind==='code'){
+          var base=await crypto.subtle.importKey('raw',new TextEncoder().encode(secret),'PBKDF2',false,['deriveKey']);
+          kek=await crypto.subtle.deriveKey({name:'PBKDF2',salt:sealed.slice(4,20),iterations:600000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+          ck=await open(kek,sealed.slice(20,80));
+        }else{
+          kek=await crypto.subtle.importKey('raw',unb64(secret),{name:'AES-GCM'},false,['decrypt']);
+          ck=await open(kek,sealed.slice(80,140));
+        }
+      }catch(e){
+        try{localStorage.removeItem(kind==='code'?KC:KL)}catch(x){}
+        $('lb').disabled=false;
+        if(kind==='link'){ var sc=null; try{sc=localStorage.getItem(KC)}catch(x){} if(sc) return unlock(sc,'code',true); say('That link no longer works. Type the code instead.',true); return false; }
+        say(quiet?'Type the code to open it.':'That code is not right. Try again.',!quiet); return false;
+      }
+      var zipped=await open(await crypto.subtle.importKey('raw',ck,{name:'AES-GCM'},false,['decrypt']),sealed.slice(140));
       var app=JSON.parse(await new Response(new Blob([zipped]).stream().pipeThrough(new DecompressionStream('gzip'))).text());
-      try{localStorage.setItem(KEY,code)}catch(x){}
+      try{localStorage.setItem(kind==='code'?KC:KL,secret)}catch(x){}
       say('Loading the map...');
       await script('data/world.js?v=e9cfee21c4'); await script('data/relief.js?v=936e27953f');
       document.title=app.title; $('lockcss').remove();
@@ -68,10 +85,14 @@ html,body{margin:0;height:100%;background:radial-gradient(120% 90% at 50% 40%,#1
       return true;
     }catch(e){ say('Could not load the map. Check the internet and try again.',true); $('lb').disabled=false; return false; }
   }
-  $('lf').addEventListener('submit',function(e){e.preventDefault();unlock($('lc').value)});
-  var m=/[#&]k=([^&]+)/.exec(location.hash), saved=null; try{saved=localStorage.getItem(KEY)}catch(x){}
-  if(m){ try{history.replaceState(null,'',location.pathname+location.search)}catch(x){} unlock(decodeURIComponent(m[1])); }
-  else if(saved) unlock(saved,true);
+  $('lf').addEventListener('submit',function(e){e.preventDefault();unlock($('lc').value,'code')});
+  var ml=/[#&]l=([A-Za-z0-9_-]+)/.exec(location.hash), mk=/[#&]k=([^&]+)/.exec(location.hash), sc=null, sl=null;
+  try{sc=localStorage.getItem(KC);sl=localStorage.getItem(KL)}catch(x){}
+  if(ml||mk){ try{history.replaceState(null,'',location.pathname+location.search)}catch(x){} } // take the secret out of the address bar straight away
+  if(ml) unlock(ml[1],'link');
+  else if(mk) unlock(decodeURIComponent(mk[1]),'code');
+  else if(sl) unlock(sl,'link',true);
+  else if(sc) unlock(sc,'code',true);
   else $('lc').focus();
 })();
 </script>
