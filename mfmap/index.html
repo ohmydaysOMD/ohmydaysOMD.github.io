@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#0a1322">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Family Map">
 <title>Map</title>
 <style id="lockcss">
 html,body{margin:0;height:100%;background:radial-gradient(120% 90% at 50% 40%,#16284a,#060b17);color:#fff;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
@@ -30,6 +37,10 @@ html,body{margin:0;height:100%;background:radial-gradient(120% 90% at 50% 40%,#1
 </form></div>
 <script>
 (function(){
+  // installing: keep the browser's offer so the app can show its own Install button, and switch on offline support
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.mapInstall=e;window.dispatchEvent(new Event('mapinstall'))});
+  window.addEventListener('appinstalled',function(){window.mapInstall=null;window.dispatchEvent(new Event('mapinstall'))});
+  if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(){});
   var KEY='mfmap.code', $=function(i){return document.getElementById(i)};
   var norm=function(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'')};
   var say=function(t,bad){var m=$('lm');m.textContent=t;m.className=bad?'bad':''};
@@ -40,7 +51,7 @@ html,body{margin:0;height:100%;background:radial-gradient(120% 90% at 50% 40%,#1
     if(!window.crypto||!crypto.subtle||!window.DecompressionStream){say('This browser is too old to open the map. Try Chrome or Safari, up to date.',true);return false}
     $('lb').disabled=true; if(!quiet) say('Opening...');
     try{
-      if(!sealed) sealed=new Uint8Array(await (await fetch('app.bin?v=mwhp458r')).arrayBuffer());
+      if(!sealed) sealed=new Uint8Array(await (await fetch('app.bin?v=mwhp99ct')).arrayBuffer());
       var base=await crypto.subtle.importKey('raw',new TextEncoder().encode(code),'PBKDF2',false,['deriveKey']);
       var key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:sealed.slice(0,16),iterations:600000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
       var zipped;
@@ -49,7 +60,7 @@ html,body{margin:0;height:100%;background:radial-gradient(120% 90% at 50% 40%,#1
       var app=JSON.parse(await new Response(new Blob([zipped]).stream().pipeThrough(new DecompressionStream('gzip'))).text());
       try{localStorage.setItem(KEY,code)}catch(x){}
       say('Loading the map...');
-      await script('data/world.js?v=mwhp458r'); await script('data/relief.js?v=mwhp458r');
+      await script('data/world.js?v=e9cfee21c4'); await script('data/relief.js?v=936e27953f');
       document.title=app.title; $('lockcss').remove();
       var st=document.createElement('style'); st.textContent=app.css; document.head.appendChild(st);
       document.body.innerHTML=app.body;
